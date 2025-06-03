@@ -2,7 +2,7 @@
   <div :class="theme.cardClass">
     <div class="experience-header">
       <h2>{{ theme.experienceTitle || 'Professional Experience' }}</h2>
-      <span class="timeline-subtitle">From oldest to newest</span>
+      <span class="timeline-subtitle">From newest to oldest</span>
     </div>
 
     <div class="timeline">
