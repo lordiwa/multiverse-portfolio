@@ -289,8 +289,7 @@ export const profileData = {
       skills: ["Exotic Animal Surgery", "Wildlife Medicine", "Digital Health Records", "Emergency Care", "Conservation Medicine", "Anesthesiology", "Behavioral Assessment"],
       languages: [
         { name: "Spanish", level: "Native" },
-        { name: "English", level: "Fluent" },
-        { name: "Portuguese", level: "Basic" }
+        { name: "English", level: "Fluent" }
       ],
       summary: "Dedicated veterinary surgeon with expertise in exotic animals and wildlife conservation. Pioneered digital health record systems in Ecuador's veterinary field. My passion lies in treating endangered species and educating communities about wildlife conservation. I operate between clinical practice and field conservation work, often venturing into the Amazon rainforest for wildlife rescue missions. My technical background helps me develop innovative solutions for animal care and data management in remote locations."
     },
@@ -398,8 +397,7 @@ export const profileData = {
       skills: ["Salsa Choreography", "Bachata Instruction", "Latin Dance", "Competition Coaching", "Studio Management", "Digital Dance Education", "Event Organization"],
       languages: [
         { name: "Spanish", level: "Native" },
-        { name: "English", level: "Fluent" },
-        { name: "Portuguese", level: "Intermediate" }
+        { name: "English", level: "Fluent" }
       ],
       summary: "Passionate dance instructor and choreographer specializing in Latin dances, particularly Salsa and Bachata. Started dancing as a teenager and turned my passion into a thriving career. I've competed internationally, trained under world-renowned instructors, and now own one of Quito's most popular dance studios. My innovative approach combines traditional Latin dance techniques with modern digital teaching methods, making dance accessible to students worldwide through online platforms."
     },
@@ -507,8 +505,7 @@ export const profileData = {
       skills: ["Modern Ecuadorian Cuisine", "Molecular Gastronomy", "Sustainable Cooking", "Restaurant Management", "Food Technology", "Menu Engineering", "Culinary Innovation"],
       languages: [
         { name: "Spanish", level: "Native" },
-        { name: "English", level: "Fluent" },
-        { name: "French", level: "Intermediate" }
+        { name: "English", level: "Fluent" }
       ],
       summary: "Innovative executive chef dedicated to elevating Ecuadorian cuisine on the global stage. Started in family kitchens and trained in Europe's finest establishments before returning to revolutionize local gastronomy. I combine traditional indigenous ingredients with modern techniques and technology to create unforgettable dining experiences. My restaurants focus on sustainability, local sourcing, and pushing the boundaries of what South American cuisine can be."
     },
@@ -634,8 +631,7 @@ export const profileData = {
       skills: ["Deep Sea Research", "Marine Ecology", "Underwater Photography", "Data Analysis", "Conservation Biology", "Diving Technology", "Ocean Modeling"],
       languages: [
         { name: "Spanish", level: "Native" },
-        { name: "English", level: "Fluent" },
-        { name: "Portuguese", level: "Intermediate" }
+        { name: "English", level: "Fluent" }
       ],
       summary: "Dedicated marine biologist with expertise in deep sea ecosystems and conservation. Specializing in Galápagos marine life research and protection. I combine traditional marine biology with cutting-edge underwater technology to study and protect Ecuador's unique marine biodiversity. My work focuses on understanding climate change impacts on marine ecosystems and developing innovative conservation strategies. I'm passionate about making ocean science accessible through technology and education."
     },
@@ -743,8 +739,7 @@ export const profileData = {
       skills: ["Professional Gaming", "Team Strategy", "Content Creation", "Stream Management", "Tournament Organization", "Gaming Hardware", "Esports Analytics"],
       languages: [
         { name: "Spanish", level: "Native" },
-        { name: "English", level: "Fluent" },
-        { name: "Portuguese", level: "Basic" }
+        { name: "English", level: "Fluent" }
       ],
       summary: "Professional esports player and content creator with expertise in FPS and strategy games. Started gaming competitively as a teenager and built it into a successful career spanning playing, content creation, and business. I've competed in international tournaments, built a massive streaming following, and now own one of Latin America's top esports teams. My focus is on elevating the South American gaming scene and developing technology to improve competitive gaming."
     },
@@ -840,3 +835,5 @@ export const profileData = {
     ]
   }
 }
+// Reverse the experiences array for the "current" profile
+profileData.current.experiences.reverse();
