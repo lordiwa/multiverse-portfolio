@@ -126,13 +126,13 @@ export const themes = {
   },
 
   aiOverlord: {
-    containerClass: 'tech-container', // Reusing tech theme
-    cardClass: 'contact-card tech-card',
-    skillBadgeClass: 'skill-badge tech-skill',
-    techBadgeClass: 'tech-badge tech-tech',
-    dotClass: 'tech-dot',
-    linkCardClass: 'tech-link',
-    selectClass: 'tech-select',
+    containerClass: 'tattoo-container', // Reusing tech theme
+    cardClass: 'contact-card tattoo-card',
+    skillBadgeClass: 'skill-badge tattoo-skill',
+    techBadgeClass: 'tech-badge tattoo-tech',
+    dotClass: 'tattoo-dot',
+    linkCardClass: 'tattoo-link',
+    selectClass: 'tattoo-select',
     experienceTitle: 'AI Innovations',
     linksTitle: 'Technology & Ethics',
     linksSubtitle: 'Explore my work in AI and technological advancements',

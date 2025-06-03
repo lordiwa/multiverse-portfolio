@@ -925,7 +925,7 @@ export const profileData = {
       phone: "+593989661803",
       email: "srparca@gmail.com",
       linkedin: "https://www.linkedin.com/in/rmatovelle",
-      avatar: "🤖",
+      avatar: "🌍",
       skills: ["Machine Learning", "AI Ethics", "Autonomous Systems", "Big Data Analysis", "Global Strategy"],
       languages: [
         { name: "Spanish", level: "Native" },
