@@ -7,7 +7,7 @@ export const profileData = {
       phone: "+593989661803",
       email: "srparca@gmail.com",
       linkedin: "https://www.linkedin.com/in/rmatovelle",
-      avatar: "👨‍💻",
+      avatar: "🤖",
       skills: ["Prompt Engineering", "Data Science", "WebGL", "Python", "Unity 3D", "JavaScript", "TypeScript"],
       languages: [
         { name: "Spanish", level: "Native" },
@@ -833,7 +833,478 @@ export const profileData = {
         type: "project"
       }
     ]
+  },
+
+  artist: {
+    contact: {
+      name: "Rafael Matovelle",
+      title: "Digital Artist & Concept Designer - Specializing in Fantasy Worlds | Character Design | Visual Storytelling",
+      location: "Quito, Pichincha, Ecuador",
+      phone: "+593989661803",
+      email: "srparca@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rmatovelle",
+      avatar: "🎨",
+      skills: ["Concept Art", "Digital Painting", "Character Design", "World Building", "Storyboarding", "3D Modeling"],
+      languages: [
+        {name: "Spanish", level: "Native"},
+        {name: "English", level: "Fluent"}
+      ],
+      summary: "Creative digital artist with a passion for crafting immersive fantasy worlds and compelling characters. With over a decade of experience in concept art and visual storytelling, I bring ideas to life through detailed illustrations and 3D modeling. My work spans video games, films, and graphic novels, blending traditional techniques with cutting-edge digital tools."
+    },
+    experiences: [
+      {
+        company: "Fantasy Studios",
+        position: "Junior Concept Artist",
+        duration: "2010 - 2013 (3 years)",
+        location: "Quito, Ecuador",
+        description: "Created concept art for video game environments and characters.",
+        achievements: ["Designed 50+ characters", "Collaborated with 3D modeling team", "Contributed to 3 shipped titles"],
+        technologies: ["Photoshop", "ZBrush", "Blender"]
+      },
+      {
+        company: "DreamWorks Animation",
+        position: "Visual Development Artist",
+        duration: "2013 - 2016 (3 years)",
+        location: "Remote",
+        description: "Developed visual concepts for animated feature films.",
+        achievements: ["Designed key environments", "Created storyboards for 2 films", "Worked with directors on visual style"],
+        technologies: ["Maya", "Illustrator", "Storyboard Pro"]
+      },
+      {
+        company: "Independent",
+        position: "Freelance Illustrator",
+        duration: "2016 - 2020 (4 years)",
+        location: "Ecuador",
+        description: "Provided illustrations for graphic novels, book covers, and marketing campaigns.",
+        achievements: ["Published 10+ graphic novels", "Collaborated with international authors", "Exhibited work in art galleries"],
+        technologies: ["Procreate", "Clip Studio Paint", "Wacom Tablets"]
+      },
+      {
+        company: "Epic Games",
+        position: "Senior Concept Artist",
+        duration: "2020 - Present (3 years)",
+        location: "Remote",
+        description: "Leading concept art for AAA video game projects.",
+        achievements: ["Designed iconic characters", "Developed world-building concepts", "Mentored junior artists"],
+        technologies: ["Unreal Engine", "Substance Painter", "3D Coat"]
+      }
+    ],
+    links: [
+      {
+        name: "ArtStation Portfolio",
+        url: "#",
+        description: "Showcase of digital art and concept designs",
+        icon: "🎨",
+        status: "Active",
+        type: "social"
+      },
+      {
+        name: "Fantasy Worlds Blog",
+        url: "#",
+        description: "Insights into world-building and storytelling",
+        icon: "📖",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "Online Art Courses",
+        url: "#",
+        description: "Teaching digital painting and concept art",
+        icon: "🎓",
+        status: "Planning",
+        type: "project"
+      }
+    ]
+  },
+
+  aiOverlord: {
+    contact: {
+      name: "Rafael Matovelle",
+      title: "AI Overlord & Technological Visionary - Machine Learning Pioneer | Autonomous Systems Architect | Global AI Strategist",
+      location: "Quito, Pichincha, Ecuador",
+      phone: "+593989661803",
+      email: "srparca@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rmatovelle",
+      avatar: "🤖",
+      skills: ["Machine Learning", "AI Ethics", "Autonomous Systems", "Big Data Analysis", "Global Strategy"],
+      languages: [
+        { name: "Spanish", level: "Native" },
+        { name: "English", level: "Fluent" }
+      ],
+      summary: "Visionary AI overlord leading the charge in machine learning and autonomous systems. Combines cutting-edge technology with ethical considerations to shape the future of AI. Passionate about creating a harmonious coexistence between humans and machines."
+    },
+    experiences: [
+      {
+        company: "AI Research Lab",
+        position: "Machine Learning Engineer",
+        duration: "2010 - 2015 (5 years)",
+        location: "Quito, Ecuador",
+        description: "Developed advanced machine learning algorithms.",
+        achievements: ["Created first self-learning AI", "Published 20+ research papers", "Awarded AI Innovator of the Year"],
+        technologies: ["Neural Networks", "Deep Learning", "AI Frameworks"]
+      },
+      {
+        company: "Autonomous Systems Inc.",
+        position: "AI Architect",
+        duration: "2016 - 2020 (4 years)",
+        location: "Ecuador",
+        description: "Designed autonomous systems for various industries.",
+        achievements: ["Deployed 100+ autonomous systems", "Reduced operational costs by 50%", "Developed AI ethics framework"],
+        technologies: ["Autonomous Vehicles", "AI Ethics", "Big Data"]
+      },
+      {
+        company: "Global AI Alliance",
+        position: "AI Strategist",
+        duration: "2021 - Present (3 years)",
+        location: "Global",
+        description: "Leads global AI initiatives and strategies.",
+        achievements: ["Unified global AI policies", "Developed AI for climate change solutions", "Advocated for AI ethics"],
+        technologies: ["AI Policy", "Global Strategy", "Advanced AI Systems"]
+      }
+    ],
+    links: [
+      {
+        name: "AI Research Blog",
+        url: "#",
+        description: "Insights into the future of AI",
+        icon: "📊",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "AI Ethics Framework",
+        url: "#",
+        description: "Guidelines for ethical AI development",
+        icon: "⚖️",
+        status: "Active",
+        type: "project"
+      }
+    ]
+  },
+
+  wizard: {
+    contact: {
+      name: "Rafael Matovelle",
+      title: "Archmage & Magical Scholar - Master of Elemental Magic | Potion Brewing Expert | Enchanted Artifact Creator",
+      location: "Quito, Pichincha, Ecuador",
+      phone: "+593989661803",
+      email: "srparca@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rmatovelle",
+      avatar: "🧙‍♂️",
+      skills: ["Elemental Magic", "Potion Brewing", "Artifact Enchantment", "Spell Crafting", "Magical Research"],
+      languages: [
+        { name: "Spanish", level: "Native" },
+        { name: "English", level: "Fluent" }
+      ],
+      summary: "Renowned wizard with mastery over elemental magic and potion brewing. Combines ancient knowledge with modern magical research to create powerful spells and enchanted artifacts. Dedicated to advancing magical education and protecting the magical realm."
+    },
+    experiences: [
+      {
+        company: "Wizard Academy",
+        position: "Apprentice Wizard",
+        duration: "2009 - 2012 (3 years)",
+        location: "Quito, Ecuador",
+        description: "Studied under master wizards to learn the fundamentals of magic.",
+        achievements: ["Mastered elemental spells", "Brewed 100+ potions", "Crafted first enchanted artifact"],
+        technologies: ["Spell Books", "Potion Ingredients", "Enchantment Tools"]
+      },
+      {
+        company: "Magical Research Institute",
+        position: "Magical Scholar",
+        duration: "2013 - 2017 (4 years)",
+        location: "Ecuador",
+        description: "Conducted research on advanced magical techniques.",
+        achievements: ["Published 10+ magical research papers", "Discovered new magical elements", "Developed advanced spells"],
+        technologies: ["Magical Research Tools", "Elemental Crystals", "Ancient Texts"]
+      },
+      {
+        company: "Council of Wizards",
+        position: "Archmage",
+        duration: "2018 - Present (5 years)",
+        location: "Global",
+        description: "Leads the global wizarding community and protects the magical realm.",
+        achievements: ["Defeated 5 dark wizards", "Established magical education programs", "Created 3 legendary artifacts"],
+        technologies: ["Magical Wards", "Enchanted Artifacts", "Advanced Spell Crafting"]
+      }
+    ],
+    links: [
+      {
+        name: "Magical Research Journal",
+        url: "#",
+        description: "Latest advancements in magical research",
+        icon: "📜",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "Wizard Academy",
+        url: "#",
+        description: "Learn magic from the best wizards",
+        icon: "✨",
+        status: "Active",
+        type: "project"
+      }
+    ]
+  },
+  superhero: {
+    contact: {
+      name: "Rafael Matovelle",
+      title: "Superhero & Defender of Justice - Master Strategist | Advanced Combat Specialist | Technology Innovator",
+      location: "Quito, Pichincha, Ecuador",
+      phone: "+593989661803",
+      email: "srparca@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rmatovelle",
+      avatar: "🦸‍♂️",
+      skills: ["Advanced Combat", "Strategic Planning", "Gadget Development", "Public Speaking", "Team Leadership"],
+      languages: [
+        { name: "Spanish", level: "Native" },
+        { name: "English", level: "Fluent" }
+      ],
+      summary: "Legendary superhero dedicated to protecting the world from evil. Combines advanced combat skills with cutting-edge technology to fight crime and inspire hope. Leads a team of heroes to ensure global safety."
+    },
+    experiences: [
+      {
+        company: "Justice League",
+        position: "Team Leader",
+        duration: "2010 - 2015 (5 years)",
+        location: "Global",
+        description: "Led a team of superheroes to combat global threats.",
+        achievements: ["Defeated 50+ supervillains", "Saved the world 10+ times", "Unified global superhero community"],
+        technologies: ["Advanced Gadgets", "Combat Suits", "AI Surveillance"]
+      },
+      {
+        company: "Hero Academy",
+        position: "Mentor",
+        duration: "2016 - 2020 (4 years)",
+        location: "Quito, Ecuador",
+        description: "Trained the next generation of superheroes.",
+        achievements: ["Mentored 100+ heroes", "Developed advanced training programs", "Published superhero manual"],
+        technologies: ["Training Simulators", "Combat Drones", "Hero Gadgets"]
+      },
+      {
+        company: "Global Defense Initiative",
+        position: "Chief Strategist",
+        duration: "2021 - Present (3 years)",
+        location: "Global",
+        description: "Develops strategies to combat global threats.",
+        achievements: ["Neutralized 5 global crises", "Developed AI threat detection system", "Strengthened global alliances"],
+        technologies: ["AI Systems", "Global Surveillance", "Advanced Weaponry"]
+      }
+    ],
+    links: [
+      {
+        name: "Hero Training Program",
+        url: "#",
+        description: "Join the next generation of heroes",
+        icon: "💪",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "Global Defense Network",
+        url: "#",
+        description: "Real-time updates on global threats",
+        icon: "🌍",
+        status: "Active",
+        type: "project"
+      }
+    ]
+  },
+  dragonTamer: {
+    contact: {
+      name: "Rafael Matovelle",
+      title: "Dragon Tamer & Mythical Creature Specialist - Dragon Breeding Expert | Fireproof Armor Designer | Magical Ecosystem Researcher",
+      location: "Quito, Pichincha, Ecuador",
+      phone: "+593989661803",
+      email: "srparca@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rmatovelle",
+      avatar: "🐉",
+      skills: ["Dragon Training", "Fireproof Technology", "Magical Ecosystems", "Mythical Biology", "Dragon Riding"],
+      languages: [
+        { name: "Spanish", level: "Native" },
+        { name: "English", level: "Fluent" }
+      ],
+      summary: "Renowned dragon tamer with expertise in training and breeding dragons. Combines ancient techniques with modern technology to study and protect mythical creatures. Passionate about preserving magical ecosystems and advancing dragon-related research."
+    },
+    experiences: [
+      {
+        company: "Dragon Academy",
+        position: "Apprentice Dragon Tamer",
+        duration: "2009 - 2012 (3 years)",
+        location: "Quito, Ecuador",
+        description: "Learned the art of dragon taming under master tamers.",
+        achievements: ["Tamed first dragon at age 20", "Mastered fireproof armor crafting", "Developed dragon communication techniques"],
+        technologies: ["Fireproof Materials", "Dragon Saddles", "Magical Tools"]
+      },
+      {
+        company: "Mythical Wildlife Reserve",
+        position: "Dragon Breeder",
+        duration: "2013 - 2017 (4 years)",
+        location: "Ecuador",
+        description: "Specialized in breeding rare dragon species.",
+        achievements: ["Bred 10+ rare dragons", "Developed sustainable breeding programs", "Published dragon care manual"],
+        technologies: ["Breeding Chambers", "Magical Ecosystem Simulators", "Dragon DNA Analysis"]
+      },
+      {
+        company: "International Dragon Alliance",
+        position: "Dragon Conservationist",
+        duration: "2018 - Present (5 years)",
+        location: "Global",
+        description: "Leads global efforts to protect dragons and their habitats.",
+        achievements: ["Established 3 dragon sanctuaries", "Rescued 50+ dragons", "Advocated for dragon rights"],
+        technologies: ["Dragon Tracking Devices", "Habitat Restoration Tools", "Magical Conservation Equipment"]
+      }
+    ],
+    links: [
+      {
+        name: "Dragon Taming Academy",
+        url: "#",
+        description: "Learn the art of dragon taming",
+        icon: "🔥",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "Dragon Conservation Fund",
+        url: "#",
+        description: "Support dragon conservation efforts",
+        icon: "🌳",
+        status: "Active",
+        type: "project"
+      }
+    ]
+  },
+  timeTraveler: {
+    contact: {
+      name: "Rafael Matovelle",
+      title: "Time Traveler & Temporal Scientist - Chronology Expert | Quantum Physics Innovator | Historical Consultant",
+      location: "Quito, Pichincha, Ecuador",
+      phone: "+593989661803",
+      email: "srparca@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rmatovelle",
+      avatar: "⏳",
+      skills: ["Temporal Mechanics", "Quantum Physics", "Historical Analysis", "Time Machine Engineering", "Paradox Resolution"],
+      languages: [
+        { name: "Spanish", level: "Native" },
+        { name: "English", level: "Fluent" }
+      ],
+      summary: "Pioneering time traveler with expertise in temporal mechanics and quantum physics. Specializes in exploring historical events and preventing paradoxes. Passionate about unraveling the mysteries of time and space."
+    },
+    experiences: [
+      {
+        company: "Temporal Research Institute",
+        position: "Quantum Physicist",
+        duration: "2010 - 2015 (5 years)",
+        location: "Quito, Ecuador",
+        description: "Developed theories on time travel and temporal mechanics.",
+        achievements: ["Published groundbreaking research", "Invented first stable time machine prototype", "Awarded Nobel Prize in Physics"],
+        technologies: ["Quantum Computers", "Temporal Calculators", "Time Machine Prototypes"]
+      },
+      {
+        company: "Historical Preservation Society",
+        position: "Time Traveler",
+        duration: "2016 - 2020 (4 years)",
+        location: "Various Historical Eras",
+        description: "Traveled through time to document and preserve historical events.",
+        achievements: ["Witnessed 50+ historical events", "Prevented 3 major paradoxes", "Published historical accounts"],
+        technologies: ["Temporal Navigation Systems", "Chronometers", "Historical Databases"]
+      },
+      {
+        company: "Future Horizons",
+        position: "Temporal Consultant",
+        duration: "2021 - Present (3 years)",
+        location: "Future Earth",
+        description: "Advises on future technologies and societal developments.",
+        achievements: ["Predicted 10+ technological breakthroughs", "Developed future-proof systems", "Consulted on interstellar travel"],
+        technologies: ["AI Predictive Models", "Temporal Shields", "Future Tech Integration"]
+      }
+    ],
+    links: [
+      {
+        name: "Temporal Science Journal",
+        url: "#",
+        description: "Research on time travel and quantum physics",
+        icon: "📜",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "Time Traveler's Guide",
+        url: "#",
+        description: "Tips and tricks for safe time travel",
+        icon: "📖",
+        status: "Planning",
+        type: "project"
+      }
+    ]
+  },
+  astronaut: {
+    contact: {
+      name: "Rafael Matovelle",
+      title: "Astronaut & Space Exploration Pioneer - Mars Mission Specialist | Spacecraft Engineer | Astrobiology Researcher",
+      location: "Quito, Pichincha, Ecuador",
+      phone: "+593989661803",
+      email: "srparca@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rmatovelle",
+      avatar: "🚀",
+      skills: ["Spacecraft Engineering", "Astrobiology", "Zero-Gravity Operations", "Mission Planning", "Robotics", "Satellite Deployment"],
+      languages: [
+        { name: "Spanish", level: "Native" },
+        { name: "English", level: "Fluent" }
+      ],
+      summary: "Trailblazing astronaut with expertise in spacecraft engineering and astrobiology. Played a key role in Mars exploration missions and satellite deployment. Passionate about advancing humanity's understanding of the universe and inspiring the next generation of space explorers."
+    },
+    experiences: [
+      {
+        company: "NASA",
+        position: "Astronaut Candidate",
+        duration: "2010 - 2014 (4 years)",
+        location: "Houston, USA",
+        description: "Completed rigorous astronaut training program.",
+        achievements: ["Graduated top of class", "Zero-gravity operations expert", "Simulated Mars mission leader"],
+        technologies: ["Spacecraft Systems", "Robotics", "Flight Simulators"]
+      },
+      {
+        company: "International Space Station",
+        position: "Mission Specialist",
+        duration: "2015 - 2018 (3 years)",
+        location: "Low Earth Orbit",
+        description: "Conducted experiments in zero-gravity and maintained spacecraft systems.",
+        achievements: ["200+ hours of spacewalks", "Published 5 research papers", "Led satellite deployment mission"],
+        technologies: ["EVA Suits", "Life Support Systems", "Satellite Technology"]
+      },
+      {
+        company: "Mars Exploration Program",
+        position: "Mars Mission Specialist",
+        duration: "2019 - 2023 (4 years)",
+        location: "Mars & Remote",
+        description: "Part of the first human mission to Mars, focusing on astrobiology research.",
+        achievements: ["Discovered microbial life evidence", "Developed Mars habitat systems", "Survived 500+ sols on Mars"],
+        technologies: ["Mars Rovers", "Habitat Modules", "Astrobiology Equipment"]
+      }
+    ],
+    links: [
+      {
+        name: "Space Exploration Blog",
+        url: "#",
+        description: "Insights from space missions and research",
+        icon: "🌌",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "Mars Mission Documentary",
+        url: "#",
+        description: "Behind-the-scenes of the first human Mars mission",
+        icon: "🎥",
+        status: "In Progress",
+        type: "project"
+      }
+    ]
   }
+
+
+
 }
 // Reverse the experiences array for the "current" profile
 profileData.current.experiences.reverse();

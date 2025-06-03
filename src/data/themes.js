@@ -12,7 +12,7 @@ export const themes = {
     linksSubtitle: 'Connect with me and check out my active projects',
     showProjects: true
   },
-  
+
   tattoo: {
     containerClass: 'tattoo-container',
     cardClass: 'contact-card tattoo-card',
@@ -26,7 +26,7 @@ export const themes = {
     linksSubtitle: 'Check out my tattoo work and book your next piece',
     showProjects: true
   },
-  
+
   vet: {
     containerClass: 'vet-container',
     cardClass: 'contact-card vet-card',
@@ -40,60 +40,102 @@ export const themes = {
     linksSubtitle: 'Wildlife conservation work and veterinary innovation',
     showProjects: true
   },
-  
-  dance: {
-    containerClass: 'dance-container',
-    cardClass: 'contact-card dance-card',
-    skillBadgeClass: 'skill-badge dance-skill',
-    techBadgeClass: 'tech-badge dance-tech',
-    dotClass: 'dance-dot',
-    linkCardClass: 'dance-link',
-    selectClass: 'dance-select',
-    experienceTitle: 'Dance Evolution',
-    linksTitle: 'Studio & Performance Links',
-    linksSubtitle: 'Join the dance community and learn with passion',
+
+  artist: {
+    containerClass: 'tattoo-container', // Reusing tattoo theme
+    cardClass: 'contact-card tattoo-card',
+    skillBadgeClass: 'skill-badge tattoo-skill',
+    techBadgeClass: 'tech-badge tattoo-tech',
+    dotClass: 'tattoo-dot',
+    linkCardClass: 'tattoo-link',
+    selectClass: 'tattoo-select',
+    experienceTitle: 'Artistic Career',
+    linksTitle: 'Portfolio & Creative Projects',
+    linksSubtitle: 'Explore my artistic journey and creative works',
     showProjects: true
   },
-  
-  chef: {
-    containerClass: 'chef-container',
-    cardClass: 'contact-card chef-card',
-    skillBadgeClass: 'skill-badge chef-skill',
-    techBadgeClass: 'tech-badge chef-tech',
-    dotClass: 'chef-dot',
-    linkCardClass: 'chef-link',
-    selectClass: 'chef-select',
-    experienceTitle: 'Culinary Journey',
-    linksTitle: 'Restaurant & Innovation Lab',
-    linksSubtitle: 'Taste the future of Ecuadorian cuisine',
-    showProjects: true
-  },
-  
-  marine: {
-    containerClass: 'marine-container',
+
+  astronaut: {
+    containerClass: 'marine-container', // Reusing marine theme
     cardClass: 'contact-card marine-card',
     skillBadgeClass: 'skill-badge marine-skill',
     techBadgeClass: 'tech-badge marine-tech',
     dotClass: 'marine-dot',
     linkCardClass: 'marine-link',
     selectClass: 'marine-select',
-    experienceTitle: 'Marine Research Career',
-    linksTitle: 'Conservation & Research Projects',
-    linksSubtitle: 'Protecting our oceans through science and technology',
+    experienceTitle: 'Space Exploration Journey',
+    linksTitle: 'Space Missions & Research',
+    linksSubtitle: 'Discover my contributions to space exploration',
     showProjects: true
   },
-  
-  gamer: {
-    containerClass: 'gamer-container',
+
+  timeTraveler: {
+    containerClass: 'gamer-container', // Reusing gamer theme
     cardClass: 'contact-card gamer-card',
     skillBadgeClass: 'skill-badge gamer-skill',
     techBadgeClass: 'tech-badge gamer-tech',
     dotClass: 'gamer-dot',
     linkCardClass: 'gamer-link',
     selectClass: 'gamer-select',
-    experienceTitle: 'Gaming Career Progression',
-    linksTitle: 'Gaming Empire & Content',
-    linksSubtitle: 'Level up with professional gaming content',
+    experienceTitle: 'Temporal Adventures',
+    linksTitle: 'Chronology & Research',
+    linksSubtitle: 'Explore my journeys through time and space',
+    showProjects: true
+  },
+
+  dragonTamer: {
+    containerClass: 'vet-container', // Reusing vet theme
+    cardClass: 'contact-card vet-card',
+    skillBadgeClass: 'skill-badge vet-skill',
+    techBadgeClass: 'tech-badge vet-tech',
+    dotClass: 'vet-dot',
+    linkCardClass: 'vet-link',
+    selectClass: 'vet-select',
+    experienceTitle: 'Dragon Taming Journey',
+    linksTitle: 'Dragon Conservation & Research',
+    linksSubtitle: 'Learn about my work with dragons and magical creatures',
+    showProjects: true
+  },
+
+  superhero: {
+    containerClass: 'dance-container', // Reusing dance theme
+    cardClass: 'contact-card dance-card',
+    skillBadgeClass: 'skill-badge dance-skill',
+    techBadgeClass: 'tech-badge dance-tech',
+    dotClass: 'dance-dot',
+    linkCardClass: 'dance-link',
+    selectClass: 'dance-select',
+    experienceTitle: 'Heroic Adventures',
+    linksTitle: 'Justice & Innovation',
+    linksSubtitle: 'Follow my journey as a defender of justice',
+    showProjects: true
+  },
+
+  wizard: {
+    containerClass: 'chef-container', // Reusing chef theme
+    cardClass: 'contact-card chef-card',
+    skillBadgeClass: 'skill-badge chef-skill',
+    techBadgeClass: 'tech-badge chef-tech',
+    dotClass: 'chef-dot',
+    linkCardClass: 'chef-link',
+    selectClass: 'chef-select',
+    experienceTitle: 'Magical Journey',
+    linksTitle: 'Spells & Enchantments',
+    linksSubtitle: 'Dive into my magical research and creations',
+    showProjects: true
+  },
+
+  aiOverlord: {
+    containerClass: 'tech-container', // Reusing tech theme
+    cardClass: 'contact-card tech-card',
+    skillBadgeClass: 'skill-badge tech-skill',
+    techBadgeClass: 'tech-badge tech-tech',
+    dotClass: 'tech-dot',
+    linkCardClass: 'tech-link',
+    selectClass: 'tech-select',
+    experienceTitle: 'AI Innovations',
+    linksTitle: 'Technology & Ethics',
+    linksSubtitle: 'Explore my work in AI and technological advancements',
     showProjects: true
   }
-}
+};
