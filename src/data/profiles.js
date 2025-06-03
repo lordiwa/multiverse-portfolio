@@ -1308,3 +1308,15 @@ export const profileData = {
 }
 // Reverse the experiences array for the "current" profile
 profileData.current.experiences.reverse();
+profileData.vet.experiences.reverse();
+profileData.chef.experiences.reverse();
+profileData.marine.experiences.reverse();
+profileData.gamer.experiences.reverse();
+profileData.artist.experiences.reverse();
+profileData.aiOverlord.experiences.reverse();
+profileData.wizard.experiences.reverse();
+profileData.superhero.experiences.reverse();
+profileData.dragonTamer.experiences.reverse();
+profileData.timeTraveler.experiences.reverse();
+profileData.astronaut.experiences.reverse();
+// Reverse the links array for the "current" profile
