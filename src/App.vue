@@ -104,9 +104,6 @@ html, body {
   line-height: 1.6;
   transition: all 0.3s ease;
   overflow-x: hidden;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
 }
 
 #app {
@@ -115,33 +112,170 @@ html, body {
   transition: all 0.5s ease;
   margin: 0;
   position: relative;
+  overflow: hidden;
 }
 
+/* Dense starfield with varied star sizes - extended coverage */
 #app::before {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -50vh;
+  left: -50vw;
+  width: 200vw;
+  height: 200vh;
   background:
-      radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.1), transparent),
-      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.15), transparent),
-      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.1), transparent),
-      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.1), transparent);
+    /* Large bright stars - 3px */
+      radial-gradient(3px 3px at 50px 80px, #ffffff, transparent 4px),
+      radial-gradient(3px 3px at 250px 60px, #ffd700, transparent 4px),
+      radial-gradient(3px 3px at 100px 200px, #00ff7f, transparent 4px),
+      radial-gradient(3px 3px at 375px 260px, #87ceeb, transparent 4px),
+      radial-gradient(3px 3px at 425px 100px, #ffffff, transparent 4px),
+        /* Medium stars - 2px */
+      radial-gradient(2px 2px at 150px 120px, #87ceeb, transparent 3px),
+      radial-gradient(2px 2px at 350px 140px, #ff69b4, transparent 3px),
+      radial-gradient(2px 2px at 200px 180px, #ffffff, transparent 3px),
+      radial-gradient(2px 2px at 400px 160px, #ffd700, transparent 3px),
+      radial-gradient(2px 2px at 275px 320px, #ffffff, transparent 3px),
+      radial-gradient(2px 2px at 125px 40px, #ffd700, transparent 3px),
+      radial-gradient(2px 2px at 325px 20px, #00ff7f, transparent 3px),
+        /* Small distant stars - 1px */
+      radial-gradient(1px 1px at 300px 220px, #87ceeb, transparent 2px),
+      radial-gradient(1px 1px at 75px 300px, #ff69b4, transparent 2px),
+      radial-gradient(1px 1px at 175px 280px, #00ff7f, transparent 2px),
+      radial-gradient(1px 1px at 225px 340px, #ff69b4, transparent 2px),
+      radial-gradient(1px 1px at 25px 160px, #87ceeb, transparent 2px),
+      radial-gradient(1px 1px at 475px 240px, #ffd700, transparent 2px),
+      radial-gradient(1px 1px at 450px 320px, #ff69b4, transparent 2px),
+      radial-gradient(1px 1px at 50px 240px, #00ff7f, transparent 2px);
   background-repeat: repeat;
-  background-size: 200px 200px;
-  animation: pixelFloat 20s linear infinite;
+  background-size: 400px 300px;
+  animation:
+      starFallSeamless 4s linear infinite,
+      starBlink-a 2.3s ease-in-out infinite,
+      starBlink-b 3.1s ease-in-out infinite 0.5s,
+      starBlink-c 1.7s ease-in-out infinite 1s,
+      starBlink-d 2.8s ease-in-out infinite 1.5s;
   pointer-events: none;
   z-index: 1;
+  opacity: 0.8;
 }
 
-@keyframes pixelFloat {
-  0% { transform: translateY(0px) translateX(0px); }
-  25% { transform: translateY(-10px) translateX(5px); }
-  50% { transform: translateY(-20px) translateX(-5px); }
-  75% { transform: translateY(-10px) translateX(10px); }
-  100% { transform: translateY(0px) translateX(0px); }
+/* Dense second layer with varied sizes - extended coverage */
+#app::after {
+  content: '';
+  position: fixed;
+  top: -50vh;
+  left: -50vw;
+  width: 200vw;
+  height: 200vh;
+  background:
+    /* Large foreground stars - 4px (closest/brightest) */
+      radial-gradient(4px 4px at 225px 150px, #87ceeb, transparent 5px),
+      radial-gradient(4px 4px at 425px 190px, #ff69b4, transparent 5px),
+      radial-gradient(4px 4px at 325px 290px, #ffffff, transparent 5px),
+      radial-gradient(4px 4px at 450px 70px, #ffffff, transparent 5px),
+        /* Medium-large stars - 2.5px */
+      radial-gradient(2.5px 2.5px at 125px 90px, #ffffff, transparent 3.5px),
+      radial-gradient(2.5px 2.5px at 325px 110px, #ffd700, transparent 3.5px),
+      radial-gradient(2.5px 2.5px at 175px 50px, #87ceeb, transparent 3.5px),
+      radial-gradient(2.5px 2.5px at 350px 200px, #ff69b4, transparent 3.5px),
+      radial-gradient(2.5px 2.5px at 400px 120px, #ffffff, transparent 3.5px),
+        /* Small background stars - 1px and 0.5px */
+      radial-gradient(1px 1px at 25px 250px, #00ff7f, transparent 2px),
+      radial-gradient(1px 1px at 275px 170px, #ffd700, transparent 2px),
+      radial-gradient(1px 1px at 375px 330px, #ff69b4, transparent 2px),
+      radial-gradient(1px 1px at 75px 130px, #00ff7f, transparent 2px),
+      radial-gradient(1px 1px at 150px 310px, #87ceeb, transparent 2px),
+      radial-gradient(0.5px 0.5px at 250px 30px, #ffd700, transparent 1px),
+      radial-gradient(0.5px 0.5px at 50px 350px, #00ff7f, transparent 1px),
+      radial-gradient(0.5px 0.5px at 200px 270px, #87ceeb, transparent 1px),
+      radial-gradient(0.5px 0.5px at 300px 80px, #ffd700, transparent 1px);
+  background-repeat: repeat;
+  background-size: 350px 280px;
+  animation:
+      starFallSeamless 2.5s linear infinite,
+      starBlink-e 1.9s ease-in-out infinite 0.3s,
+      starBlink-f 3.4s ease-in-out infinite 0.8s,
+      starBlink-g 2.1s ease-in-out infinite 1.2s,
+      starBlink-h 2.6s ease-in-out infinite 1.7s;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* Seamless downward movement - no gaps */
+@keyframes starFallSeamless {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(300px);
+  }
+}
+
+/* Individual blinking patterns with different delays and rhythms */
+@keyframes starBlink-a {
+  0% { filter: brightness(0.2); }
+  15% { filter: brightness(1.8); }
+  30% { filter: brightness(0.4); }
+  70% { filter: brightness(0.8); }
+  100% { filter: brightness(0.3); }
+}
+
+@keyframes starBlink-b {
+  0% { filter: brightness(0.9); }
+  25% { filter: brightness(0.1); }
+  50% { filter: brightness(1.5); }
+  75% { filter: brightness(0.6); }
+  100% { filter: brightness(1.2); }
+}
+
+@keyframes starBlink-c {
+  0% { filter: brightness(0.5); }
+  40% { filter: brightness(1.9); }
+  60% { filter: brightness(0.2); }
+  100% { filter: brightness(0.7); }
+}
+
+@keyframes starBlink-d {
+  0% { filter: brightness(1.1); }
+  20% { filter: brightness(0.3); }
+  45% { filter: brightness(0.8); }
+  80% { filter: brightness(1.6); }
+  100% { filter: brightness(0.4); }
+}
+
+@keyframes starBlink-e {
+  0% { filter: brightness(0.6); }
+  35% { filter: brightness(0.2); }
+  55% { filter: brightness(1.4); }
+  85% { filter: brightness(0.9); }
+  100% { filter: brightness(0.5); }
+}
+
+@keyframes starBlink-f {
+  0% { filter: brightness(0.8); }
+  10% { filter: brightness(1.7); }
+  30% { filter: brightness(0.3); }
+  65% { filter: brightness(1.0); }
+  90% { filter: brightness(0.4); }
+  100% { filter: brightness(1.3); }
+}
+
+@keyframes starBlink-g {
+  0% { filter: brightness(0.4); }
+  25% { filter: brightness(1.2); }
+  50% { filter: brightness(0.7); }
+  75% { filter: brightness(0.2); }
+  100% { filter: brightness(1.5); }
+}
+
+@keyframes starBlink-h {
+  0% { filter: brightness(1.0); }
+  30% { filter: brightness(0.3); }
+  60% { filter: brightness(1.8); }
+  80% { filter: brightness(0.6); }
+  100% { filter: brightness(0.8); }
 }
 
 .universe-switcher {
@@ -221,25 +355,9 @@ html, body {
 
 /* Tech Theme */
 .tech-container {
-  background:
-      linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 30%, #16213e 60%, #0f3460 100%),
-      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,245,255,0.03) 2px, rgba(0,245,255,0.03) 4px);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 30%, #16213e 60%, #0f3460 100%);
   color: #00f5ff;
   position: relative;
-}
-
-.tech-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 25% 25%, rgba(0,245,255,0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(0,150,255,0.08) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .tech-container .universe-btn {
@@ -261,26 +379,10 @@ html, body {
 
 /* Tattoo Theme */
 .tattoo-container {
-  background:
-      linear-gradient(135deg, #1a0000 0%, #330000 30%, #4a0000 60%, #660000 100%),
-      repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,107,107,0.05) 3px, rgba(255,107,107,0.05) 6px);
+  background: linear-gradient(135deg, #1a0000 0%, #330000 30%, #4a0000 60%, #660000 100%);
   color: #ff6b6b;
   position: relative;
   font-family: 'Metal Mania', cursive;
-}
-
-.tattoo-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 30% 40%, rgba(255,107,107,0.15) 0%, transparent 60%),
-      radial-gradient(circle at 70% 60%, rgba(255,50,50,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .tattoo-container .universe-btn {
@@ -297,26 +399,10 @@ html, body {
 
 /* Vet Theme */
 .vet-container {
-  background:
-      linear-gradient(135deg, #0a3d0a 0%, #1a5a1a 30%, #2d7d2d 60%, #40a040 100%),
-      repeating-linear-gradient(60deg, transparent, transparent 4px, rgba(144,238,144,0.06) 4px, rgba(144,238,144,0.06) 8px);
+  background: linear-gradient(135deg, #0a3d0a 0%, #1a5a1a 30%, #2d7d2d 60%, #40a040 100%);
   color: #90ee90;
   position: relative;
   font-family: 'Fredoka One', cursive;
-}
-
-.vet-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 20% 30%, rgba(144,238,144,0.12) 0%, transparent 55%),
-      radial-gradient(circle at 80% 70%, rgba(100,200,100,0.08) 0%, transparent 45%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .vet-container .universe-btn {
@@ -333,26 +419,10 @@ html, body {
 
 /* Dance Theme */
 .dance-container {
-  background:
-      linear-gradient(135deg, #4a0040 0%, #7a0070 30%, #aa00aa 60%, #dd00dd 100%),
-      repeating-linear-gradient(120deg, transparent, transparent 3px, rgba(255,105,180,0.07) 3px, rgba(255,105,180,0.07) 6px);
+  background: linear-gradient(135deg, #4a0040 0%, #7a0070 30%, #aa00aa 60%, #dd00dd 100%);
   color: #ff69b4;
   position: relative;
   font-family: 'Pacifico', cursive;
-}
-
-.dance-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 35% 25%, rgba(255,105,180,0.15) 0%, transparent 50%),
-      radial-gradient(circle at 65% 75%, rgba(255,20,147,0.1) 0%, transparent 55%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .dance-container .universe-btn {
@@ -369,26 +439,10 @@ html, body {
 
 /* Chef Theme */
 .chef-container {
-  background:
-      linear-gradient(135deg, #2d1810 0%, #4a2818 30%, #6b3820 60%, #8b4513 100%),
-      repeating-linear-gradient(30deg, transparent, transparent 5px, rgba(255,165,0,0.05) 5px, rgba(255,165,0,0.05) 10px);
+  background: linear-gradient(135deg, #2d1810 0%, #4a2818 30%, #6b3820 60%, #8b4513 100%);
   color: #ffa500;
   position: relative;
   font-family: 'Fredoka One', cursive;
-}
-
-.chef-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 40% 35%, rgba(255,165,0,0.12) 0%, transparent 50%),
-      radial-gradient(circle at 60% 65%, rgba(255,140,0,0.08) 0%, transparent 45%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .chef-container .universe-btn {
@@ -405,26 +459,10 @@ html, body {
 
 /* Marine Theme */
 .marine-container {
-  background:
-      linear-gradient(135deg, #001a33 0%, #003366 30%, #004d99 60%, #0066cc 100%),
-      repeating-linear-gradient(75deg, transparent, transparent 4px, rgba(0,191,255,0.06) 4px, rgba(0,191,255,0.06) 8px);
+  background: linear-gradient(135deg, #001a33 0%, #003366 30%, #004d99 60%, #0066cc 100%);
   color: #00bfff;
   position: relative;
   font-family: 'Space Mono', monospace;
-}
-
-.marine-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 25% 40%, rgba(0,191,255,0.15) 0%, transparent 60%),
-      radial-gradient(circle at 75% 60%, rgba(0,150,255,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .marine-container .universe-btn {
@@ -441,26 +479,10 @@ html, body {
 
 /* Gamer Theme */
 .gamer-container {
-  background:
-      linear-gradient(135deg, #1a001a 0%, #330033 30%, #4d004d 60%, #660066 100%),
-      repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(157,78,221,0.08) 2px, rgba(157,78,221,0.08) 4px);
+  background: linear-gradient(135deg, #1a001a 0%, #330033 30%, #4d004d 60%, #660066 100%);
   color: #9d4edd;
   position: relative;
   font-family: 'Russo One', monospace;
-}
-
-.gamer-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 30% 20%, rgba(157,78,221,0.15) 0%, transparent 55%),
-      radial-gradient(circle at 70% 80%, rgba(138,43,226,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .gamer-container .universe-btn {
@@ -477,26 +499,10 @@ html, body {
 
 /* Artist Theme */
 .artist-container {
-  background:
-      linear-gradient(135deg, #2d1b3d 0%, #4a2c5a 30%, #663d77 60%, #8b4e94 100%),
-      repeating-linear-gradient(30deg, transparent, transparent 3px, rgba(221,160,221,0.07) 3px, rgba(221,160,221,0.07) 6px);
+  background: linear-gradient(135deg, #2d1b3d 0%, #4a2c5a 30%, #663d77 60%, #8b4e94 100%);
   color: #dda0dd;
   position: relative;
   font-family: 'Pacifico', cursive;
-}
-
-.artist-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 40% 30%, rgba(221,160,221,0.12) 0%, transparent 50%),
-      radial-gradient(circle at 60% 70%, rgba(186,85,211,0.08) 0%, transparent 45%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .artist-container .universe-btn {
@@ -513,26 +519,10 @@ html, body {
 
 /* Astronaut Theme */
 .astronaut-container {
-  background:
-      linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 30%, #2a2a4a 60%, #3a3a5a 100%),
-      repeating-linear-gradient(60deg, transparent, transparent 4px, rgba(192,192,192,0.06) 4px, rgba(192,192,192,0.06) 8px);
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 30%, #2a2a4a 60%, #3a3a5a 100%);
   color: #c0c0c0;
   position: relative;
   font-family: 'Orbitron', monospace;
-}
-
-.astronaut-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 30% 25%, rgba(192,192,192,0.15) 0%, transparent 60%),
-      radial-gradient(circle at 70% 75%, rgba(135,206,235,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .astronaut-container .universe-btn {
@@ -549,26 +539,10 @@ html, body {
 
 /* Time Traveler Theme */
 .time-container {
-  background:
-      linear-gradient(135deg, #1a1a0a 0%, #3a3a1a 30%, #4a4a2a 60%, #5a5a3a 100%),
-      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,215,0,0.08) 2px, rgba(255,215,0,0.08) 4px);
+  background: linear-gradient(135deg, #1a1a0a 0%, #3a3a1a 30%, #4a4a2a 60%, #5a5a3a 100%);
   color: #ffd700;
   position: relative;
   font-family: 'Bungee', cursive;
-}
-
-.time-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 25% 35%, rgba(255,215,0,0.12) 0%, transparent 55%),
-      radial-gradient(circle at 75% 65%, rgba(255,165,0,0.08) 0%, transparent 45%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .time-container .universe-btn {
@@ -585,26 +559,10 @@ html, body {
 
 /* Dragon Tamer Theme */
 .dragon-container {
-  background:
-      linear-gradient(135deg, #3a0a0a 0%, #5a1a1a 30%, #7a2a2a 60%, #9a3a3a 100%),
-      repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,69,0,0.08) 3px, rgba(255,69,0,0.08) 6px);
+  background: linear-gradient(135deg, #3a0a0a 0%, #5a1a1a 30%, #7a2a2a 60%, #9a3a3a 100%);
   color: #ff4500;
   position: relative;
   font-family: 'Metal Mania', cursive;
-}
-
-.dragon-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 35% 30%, rgba(255,69,0,0.15) 0%, transparent 60%),
-      radial-gradient(circle at 65% 70%, rgba(255,0,0,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .dragon-container .universe-btn {
@@ -621,26 +579,10 @@ html, body {
 
 /* Superhero Theme */
 .hero-container {
-  background:
-      linear-gradient(135deg, #0a1a3a 0%, #1a2a5a 30%, #2a3a7a 60%, #3a4a9a 100%),
-      repeating-linear-gradient(120deg, transparent, transparent 4px, rgba(30,144,255,0.07) 4px, rgba(30,144,255,0.07) 8px);
+  background: linear-gradient(135deg, #0a1a3a 0%, #1a2a5a 30%, #2a3a7a 60%, #3a4a9a 100%);
   color: #1e90ff;
   position: relative;
   font-family: 'Russo One', sans-serif;
-}
-
-.hero-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 40% 25%, rgba(30,144,255,0.15) 0%, transparent 55%),
-      radial-gradient(circle at 60% 75%, rgba(0,100,200,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .hero-container .universe-btn {
@@ -657,26 +599,10 @@ html, body {
 
 /* Wizard Theme */
 .wizard-container {
-  background:
-      linear-gradient(135deg, #1a0a3a 0%, #2a1a5a 30%, #3a2a7a 60%, #4a3a9a 100%),
-      repeating-linear-gradient(60deg, transparent, transparent 3px, rgba(147,0,211,0.08) 3px, rgba(147,0,211,0.08) 6px);
+  background: linear-gradient(135deg, #1a0a3a 0%, #2a1a5a 30%, #3a2a7a 60%, #4a3a9a 100%);
   color: #9300d3;
   position: relative;
   font-family: 'Creepster', cursive;
-}
-
-.wizard-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 30% 35%, rgba(147,0,211,0.15) 0%, transparent 60%),
-      radial-gradient(circle at 70% 65%, rgba(75,0,130,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .wizard-container .universe-btn {
@@ -693,26 +619,10 @@ html, body {
 
 /* AI Overlord Theme */
 .ai-container {
-  background:
-      linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #2a2a2a 60%, #3a3a3a 100%),
-      repeating-linear-gradient(30deg, transparent, transparent 2px, rgba(0,255,0,0.08) 2px, rgba(0,255,0,0.08) 4px);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #2a2a2a 60%, #3a3a3a 100%);
   color: #00ff00;
   position: relative;
   font-family: 'Orbitron', monospace;
-}
-
-.ai-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-      radial-gradient(circle at 25% 25%, rgba(0,255,0,0.15) 0%, transparent 60%),
-      radial-gradient(circle at 75% 75%, rgba(0,200,0,0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .ai-container .universe-btn {
@@ -725,170 +635,6 @@ html, body {
   background: linear-gradient(45deg, #00ff00, #00c800);
   color: #0a0a0a;
   box-shadow: 0 0 30px rgba(0,255,0,0.6), inset 0 0 20px rgba(255,255,255,0.1);
-}
-
-/* Section-specific styles for each theme */
-.tech-section .skills-section,
-.tech-section .languages-section,
-.tech-section .summary-section {
-  border-left: 4px solid #00f5ff;
-  background: linear-gradient(135deg, rgba(0,245,255,0.08) 0%, rgba(0,245,255,0.02) 100%);
-}
-
-.tattoo-section .skills-section,
-.tattoo-section .languages-section,
-.tattoo-section .summary-section {
-  border-left: 4px solid #ff6b6b;
-  background: linear-gradient(135deg, rgba(255,107,107,0.08) 0%, rgba(255,107,107,0.02) 100%);
-  font-style: italic;
-}
-
-.vet-section .skills-section,
-.vet-section .languages-section,
-.vet-section .summary-section {
-  border-left: 4px solid #90ee90;
-  background: linear-gradient(135deg, rgba(144,238,144,0.08) 0%, rgba(144,238,144,0.02) 100%);
-  border-radius: 20px;
-}
-
-.dance-section .skills-section,
-.dance-section .languages-section,
-.dance-section .summary-section {
-  border-left: 4px solid #ff69b4;
-  background: linear-gradient(135deg, rgba(255,105,180,0.08) 0%, rgba(255,105,180,0.02) 100%);
-  transform: skew(-2deg);
-}
-
-.chef-section .skills-section,
-.chef-section .languages-section,
-.chef-section .summary-section {
-  border-left: 4px solid #ffa500;
-  background: linear-gradient(135deg, rgba(255,165,0,0.08) 0%, rgba(255,165,0,0.02) 100%);
-  border-radius: 15px 0 15px 0;
-}
-
-.marine-section .skills-section,
-.marine-section .languages-section,
-.marine-section .summary-section {
-  border-left: 4px solid #00bfff;
-  background: linear-gradient(135deg, rgba(0,191,255,0.08) 0%, rgba(0,191,255,0.02) 100%);
-  border-radius: 0 20px 0 20px;
-}
-
-.gamer-section .skills-section,
-.gamer-section .languages-section,
-.gamer-section .summary-section {
-  border-left: 4px solid #9d4edd;
-  background: linear-gradient(135deg, rgba(157,78,221,0.08) 0%, rgba(157,78,221,0.02) 100%);
-  clip-path: polygon(0 0, 95% 0, 100% 100%, 5% 100%);
-}
-
-.artist-section .skills-section,
-.artist-section .languages-section,
-.artist-section .summary-section {
-  border-left: 4px solid #dda0dd;
-  background: linear-gradient(135deg, rgba(221,160,221,0.08) 0%, rgba(221,160,221,0.02) 100%);
-  border-radius: 25px 5px 25px 5px;
-}
-
-.astronaut-section .skills-section,
-.astronaut-section .languages-section,
-.astronaut-section .summary-section {
-  border-left: 4px solid #c0c0c0;
-  background: linear-gradient(135deg, rgba(192,192,192,0.08) 0%, rgba(192,192,192,0.02) 100%);
-  border: 2px solid rgba(192,192,192,0.3);
-  border-radius: 10px;
-}
-
-.time-section .skills-section,
-.time-section .languages-section,
-.time-section .summary-section {
-  border-left: 4px solid #ffd700;
-  background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, rgba(255,215,0,0.02) 100%);
-  transform: perspective(1000px) rotateX(5deg);
-}
-
-.dragon-section .skills-section,
-.dragon-section .languages-section,
-.dragon-section .summary-section {
-  border-left: 4px solid #ff4500;
-  background: linear-gradient(135deg, rgba(255,69,0,0.08) 0%, rgba(255,69,0,0.02) 100%);
-  border-radius: 0 30px 0 30px;
-  position: relative;
-}
-
-.dragon-section .skills-section::before,
-.dragon-section .languages-section::before,
-.dragon-section .summary-section::before {
-  content: '🔥';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.2em;
-  opacity: 0.3;
-}
-
-.hero-section .skills-section,
-.hero-section .languages-section,
-.hero-section .summary-section {
-  border-left: 4px solid #1e90ff;
-  background: linear-gradient(135deg, rgba(30,144,255,0.08) 0%, rgba(30,144,255,0.02) 100%);
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(30,144,255,0.3);
-}
-
-.wizard-section .skills-section,
-.wizard-section .languages-section,
-.wizard-section .summary-section {
-  border-left: 4px solid #9300d3;
-  background: linear-gradient(135deg, rgba(147,0,211,0.08) 0%, rgba(147,0,211,0.02) 100%);
-  border-radius: 50px 0 50px 0;
-  position: relative;
-}
-
-.wizard-section .skills-section::after,
-.wizard-section .languages-section::after,
-.wizard-section .summary-section::after {
-  content: '✨';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5em;
-  opacity: 0.4;
-  animation: sparkle 2s ease-in-out infinite alternate;
-}
-
-@keyframes sparkle {
-  0% { opacity: 0.2; transform: scale(1); }
-  100% { opacity: 0.8; transform: scale(1.2); }
-}
-
-.ai-section .skills-section,
-.ai-section .languages-section,
-.ai-section .summary-section {
-  border-left: 4px solid #00ff00;
-  background: linear-gradient(135deg, rgba(0,255,0,0.08) 0%, rgba(0,255,0,0.02) 100%);
-  border: 1px solid rgba(0,255,0,0.3);
-  position: relative;
-}
-
-.ai-section .skills-section::before,
-.ai-section .languages-section::before,
-.ai-section .summary-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 11px);
-  pointer-events: none;
-  animation: matrix 10s linear infinite;
-}
-
-@keyframes matrix {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(100px); }
 }
 
 @media (max-width: 768px) {
@@ -906,25 +652,6 @@ html, body {
 
   .portfolio-container {
     padding: 100px 15px 15px 15px;
-  }
-
-  /* Reset transforms for mobile */
-  .dance-section .skills-section,
-  .dance-section .languages-section,
-  .dance-section .summary-section {
-    transform: none;
-  }
-
-  .time-section .skills-section,
-  .time-section .languages-section,
-  .time-section .summary-section {
-    transform: none;
-  }
-
-  .gamer-section .skills-section,
-  .gamer-section .languages-section,
-  .gamer-section .summary-section {
-    clip-path: none;
   }
 }
 </style>
