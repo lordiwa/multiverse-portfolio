@@ -1,5 +1,13 @@
 <template>
   <div :class="[theme.cardClass, theme.sectionStyle]">
+    <!-- Email Contact Button -->
+    <div class="email-button-container">
+      <button @click="openEmailModal" :class="['email-contact-btn', theme.sectionStyle]">
+        <span class="email-icon">📡</span>
+        <span class="email-text">Send Neural Message</span>
+      </button>
+    </div>
+
     <div class="contact-header">
       <div class="avatar">
         <span class="avatar-icon">{{ contact.avatar }}</span>
@@ -57,11 +65,101 @@
       <h3>Summary</h3>
       <p>{{ contact.summary }}</p>
     </div>
+
+    <!-- Email Contact Modal -->
+    <div v-if="showEmailModal" class="email-modal-overlay" @click="closeEmailModal">
+      <div :class="['email-modal', theme.containerClass]" @click.stop>
+        <div class="modal-header">
+          <h2>{{ getModalTitle() }}</h2>
+          <button @click="closeEmailModal" class="close-btn" :disabled="isLoading">✕</button>
+        </div>
+
+        <form @submit.prevent="sendEmail" class="email-form">
+          <div class="form-group">
+            <label for="name">Your Name:</label>
+            <input
+                type="text"
+                id="name"
+                v-model="formData.name"
+                required
+                :class="['form-input', theme.sectionStyle]"
+                placeholder="Enter your full name"
+                :disabled="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Your Email:</label>
+            <input
+                type="email"
+                id="email"
+                v-model="formData.email"
+                required
+                :class="['form-input', theme.sectionStyle]"
+                placeholder="Enter your email address"
+                :disabled="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input
+                type="text"
+                id="subject"
+                v-model="formData.subject"
+                required
+                :class="['form-input', theme.sectionStyle]"
+                placeholder="What's this about?"
+                :disabled="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message:</label>
+            <textarea
+                id="message"
+                v-model="formData.message"
+                required
+                :class="['form-textarea', theme.sectionStyle]"
+                placeholder="Tell me what's on your mind..."
+                rows="5"
+                :disabled="isLoading"
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" @click="closeEmailModal" class="btn-cancel" :disabled="isLoading">
+              Cancel
+            </button>
+            <button type="submit" :disabled="isLoading" :class="['btn-submit', theme.sectionStyle]">
+              <span v-if="!isLoading">Send Message</span>
+              <span v-else class="loading-text">
+                <span class="loading-spinner"></span>
+                Transmitting...
+              </span>
+            </button>
+          </div>
+        </form>
+
+        <div v-if="showSuccess" class="success-message">
+          <span class="success-icon">✓</span>
+          Message transmitted successfully!
+        </div>
+
+        <div v-if="showError" class="error-message">
+          <span class="error-icon">⚠</span>
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { ref, reactive } from 'vue'
+import emailjs from '@emailjs/browser'
+
+const props = defineProps({
   contact: {
     type: Object,
     required: true
@@ -71,9 +169,704 @@ defineProps({
     required: true
   }
 })
+
+const showEmailModal = ref(false)
+const isLoading = ref(false)
+const showSuccess = ref(false)
+const showError = ref(false)
+const errorMessage = ref('')
+
+const formData = reactive({
+  name: '',
+  email: '',
+  subject: '',
+  message: ''
+})
+
+// Replace these with your actual EmailJS credentials
+const EMAILJS_SERVICE_ID = 'service_5x9j9fs'     // Replace with your Service ID
+const EMAILJS_TEMPLATE_ID = 'template_dc44l2q'   // Replace with your Template ID
+const EMAILJS_PUBLIC_KEY = 'SWXJ2EX2b2pyGhEOV'     // Replace with your Public Key
+
+const getCurrentCareer = () => {
+  const containerClass = props.theme.containerClass
+  if (containerClass.includes('tech')) return 'current'
+  if (containerClass.includes('tattoo')) return 'tattoo'
+  if (containerClass.includes('vet')) return 'vet'
+  if (containerClass.includes('dance')) return 'dance'
+  if (containerClass.includes('chef')) return 'chef'
+  if (containerClass.includes('marine')) return 'marine'
+  if (containerClass.includes('gamer')) return 'gamer'
+  if (containerClass.includes('artist')) return 'artist'
+  if (containerClass.includes('astronaut')) return 'astronaut'
+  if (containerClass.includes('time')) return 'timeTraveler'
+  if (containerClass.includes('dragon')) return 'dragonTamer'
+  if (containerClass.includes('hero')) return 'superhero'
+  if (containerClass.includes('wizard')) return 'wizard'
+  if (containerClass.includes('ai')) return 'aiOverlord'
+  return 'current'
+}
+
+const getModalTitle = () => {
+  const titles = {
+    current: 'NEURAL LINK COMMUNICATION',
+    tattoo: 'INK THE MESSAGE',
+    vet: 'ANIMAL COMMUNICATION PROTOCOL',
+    dance: 'RHYTHM CONNECTION',
+    chef: 'CULINARY CORRESPONDENCE',
+    marine: 'DEEP SEA TRANSMISSION',
+    gamer: 'PLAYER COMMUNICATION',
+    artist: 'CREATIVE TRANSMISSION',
+    astronaut: 'SPACE COMMUNICATION',
+    timeTraveler: 'TEMPORAL MESSAGE',
+    dragonTamer: 'DRAGON MAIL',
+    superhero: 'HERO HOTLINE',
+    wizard: 'MAGICAL CORRESPONDENCE',
+    aiOverlord: 'AI INTERFACE'
+  }
+  return titles[getCurrentCareer()] || 'NEURAL LINK COMMUNICATION'
+}
+
+const openEmailModal = () => {
+  showEmailModal.value = true
+  showError.value = false
+  showSuccess.value = false
+}
+
+const closeEmailModal = () => {
+  if (isLoading.value) return // Prevent closing while sending
+
+  // Reset form
+  formData.name = ''
+  formData.email = ''
+  formData.subject = ''
+  formData.message = ''
+  showSuccess.value = false
+  showError.value = false
+  isLoading.value = false
+  showEmailModal.value = false
+}
+
+const sendEmail = async () => {
+  isLoading.value = true
+  showError.value = false
+
+  try {
+    // Template parameters that match your EmailJS template variables
+    const templateParams = {
+      subject: formData.subject,           // → {{subject}}
+      name: formData.name,                 // → {{name}}
+      from_email: formData.email,          // Used for reply-to
+      message: formData.message,           // → {{message}}
+      time: new Date().toLocaleString()    // → {{time}}
+    }
+
+    console.log('Sending email with params:', templateParams)
+
+    const result = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+    )
+
+    console.log('Email sent successfully:', result)
+    showSuccess.value = true
+
+    setTimeout(() => {
+      closeEmailModal()
+    }, 3000)
+
+  } catch (error) {
+    console.error('Error sending email:', error)
+    showError.value = true
+    errorMessage.value = 'Failed to send email. Please try again.'
+  } finally {
+    isLoading.value = false
+  }
+}
 </script>
 
 <style scoped>
+/* Email Button Styling */
+.email-button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 2;
+}
+
+.email-contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 35px;
+  border: 4px solid currentColor;
+  border-radius: 12px;
+  background: linear-gradient(45deg,
+  rgba(255, 255, 255, 0.1) 0%,
+  rgba(255, 255, 255, 0.05) 50%,
+  rgba(255, 255, 255, 0.02) 100%);
+  color: currentColor;
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  font-size: 1.1em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 40px currentColor;
+
+  /* Pixelated retro effect */
+  background-image:
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+}
+
+.email-contact-btn::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, currentColor, transparent, currentColor);
+  border-radius: 12px;
+  z-index: -1;
+  animation: borderPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes borderPulse {
+  0% { opacity: 0.5; filter: brightness(1); }
+  100% { opacity: 1; filter: brightness(1.5); }
+}
+
+.email-contact-btn:hover {
+  background: linear-gradient(45deg,
+  rgba(255, 255, 255, 0.2) 0%,
+  rgba(255, 255, 255, 0.1) 50%,
+  rgba(255, 255, 255, 0.05) 100%);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow:
+      0 15px 50px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 80px currentColor;
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.email-contact-btn:active {
+  transform: translateY(-3px) scale(1.02);
+}
+
+.email-icon {
+  font-size: 1.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 0 15px currentColor;
+  animation: iconRotate 4s ease-in-out infinite;
+}
+
+@keyframes iconRotate {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-5deg) scale(1.1); }
+  75% { transform: rotate(5deg) scale(1.1); }
+}
+
+.email-text {
+  text-shadow: 0 0 15px currentColor;
+  font-weight: 900;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: black;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Theme-specific button text */
+.tattoo-section .email-text::after {
+  content: " (Ink Message)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.vet-section .email-text::after {
+  content: " (Animal Signal)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.dance-section .email-text::after {
+  content: " (Rhythm Note)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.chef-section .email-text::after {
+  content: " (Recipe Request)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.marine-section .email-text::after {
+  content: " (Ocean Wave)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.gamer-section .email-text::after {
+  content: " (Player Chat)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.artist-section .email-text::after {
+  content: " (Art Request)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.astronaut-section .email-text::after {
+  content: " (Space Signal)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.time-section .email-text::after {
+  content: " (Time Portal)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.dragon-section .email-text::after {
+  content: " (Dragon Call)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.hero-section .email-text::after {
+  content: " (Hero Signal)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.wizard-section .email-text::after {
+  content: " (Magic Scroll)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.ai-section .email-text::after {
+  content: " (AI Protocol)";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+/* Email Modal Styling */
+.email-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.email-modal {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 0;
+  position: relative;
+  font-family: 'Orbitron', monospace;
+
+  /* Pixelated retro space UI styling */
+  background: linear-gradient(135deg,
+  rgba(0, 20, 40, 0.95) 0%,
+  rgba(0, 40, 80, 0.95) 50%,
+  rgba(0, 20, 40, 0.95) 100%);
+  border: 4px solid currentColor;
+  box-shadow:
+      0 0 30px currentColor,
+      inset 0 0 30px rgba(255, 255, 255, 0.1),
+      0 0 100px rgba(0, 255, 255, 0.3);
+
+  /* Pixelated border effect */
+  background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px);
+
+  animation: modalGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes modalGlow {
+  0% {
+    box-shadow:
+        0 0 30px currentColor,
+        inset 0 0 30px rgba(255, 255, 255, 0.1),
+        0 0 100px rgba(0, 255, 255, 0.3);
+  }
+  100% {
+    box-shadow:
+        0 0 50px currentColor,
+        inset 0 0 50px rgba(255, 255, 255, 0.2),
+        0 0 150px rgba(0, 255, 255, 0.5);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 30px;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(90deg,
+  rgba(255, 255, 255, 0.1) 0%,
+  rgba(255, 255, 255, 0.05) 50%,
+  rgba(255, 255, 255, 0.1) 100%);
+}
+
+.modal-header h2 {
+  font-size: 1.8em;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin: 0;
+  color: currentColor;
+  text-shadow: 0 0 20px currentColor;
+  font-family: 'Orbitron', monospace;
+}
+
+.close-btn {
+  background: transparent;
+  border: 3px solid currentColor;
+  color: currentColor;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.5em;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  font-family: 'Orbitron', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover:not(:disabled) {
+  background: currentColor;
+  color: black;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px currentColor;
+}
+
+.close-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.email-form {
+  padding: 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 10px currentColor;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 15px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: linear-gradient(135deg,
+  rgba(0, 0, 0, 0.5) 0%,
+  rgba(0, 0, 0, 0.3) 100%);
+  color: currentColor;
+  font-family: 'Orbitron', monospace;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+
+  /* Retro computer terminal styling */
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.02) 1px, rgba(255,255,255,0.02) 2px);
+}
+
+.form-input:disabled,
+.form-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: currentColor;
+  box-shadow:
+      0 0 20px currentColor,
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg,
+  rgba(0, 0, 0, 0.7) 0%,
+  rgba(0, 0, 0, 0.5) 100%);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: 'Orbitron', monospace;
+}
+
+.form-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.btn-cancel,
+.btn-submit {
+  padding: 15px 30px;
+  border: 3px solid currentColor;
+  border-radius: 8px;
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: currentColor;
+  border-color: currentColor;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-submit {
+  background: linear-gradient(45deg, currentColor, rgba(255, 255, 255, 0.8));
+  color: black;
+  border-color: currentColor;
+  box-shadow: 0 0 20px currentColor;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 40px currentColor;
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  animation: none;
+}
+
+.success-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(45deg, #22c55e, #16a34a);
+  color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  border: 3px solid #22c55e;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow:
+      0 0 30px #22c55e,
+      inset 0 0 20px rgba(255, 255, 255, 0.2);
+  animation: successPulse 0.5s ease-out;
+  z-index: 10;
+}
+
+.error-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(45deg, #ef4444, #dc2626);
+  color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  border: 3px solid #ef4444;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow:
+      0 0 30px #ef4444,
+      inset 0 0 20px rgba(255, 255, 255, 0.2);
+  animation: errorPulse 0.5s ease-out;
+  z-index: 10;
+  text-align: center;
+  max-width: 80%;
+}
+
+@keyframes successPulse {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes errorPulse {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.success-icon,
+.error-icon {
+  font-size: 1.5em;
+  margin-right: 10px;
+  text-shadow: 0 0 10px white;
+}
+
+/* Theme-specific modal styling */
+.tech-container .email-modal {
+  color: #00f5ff;
+  border-color: #00f5ff;
+}
+
+.tattoo-container .email-modal {
+  color: #ff6b6b;
+  border-color: #ff6b6b;
+  font-family: 'Metal Mania', cursive;
+}
+
+.vet-container .email-modal {
+  color: #90ee90;
+  border-color: #90ee90;
+  font-family: 'Fredoka One', cursive;
+}
+
+.dance-container .email-modal {
+  color: #ff69b4;
+  border-color: #ff69b4;
+  font-family: 'Pacifico', cursive;
+}
+
+.chef-container .email-modal {
+  color: #ffa500;
+  border-color: #ffa500;
+  font-family: 'Fredoka One', cursive;
+}
+
+.marine-container .email-modal {
+  color: #00bfff;
+  border-color: #00bfff;
+}
+
+.gamer-container .email-modal {
+  color: #9d4edd;
+  border-color: #9d4edd;
+  font-family: 'Russo One', monospace;
+}
+
+.artist-container .email-modal {
+  color: #dda0dd;
+  border-color: #dda0dd;
+  font-family: 'Pacifico', cursive;
+}
+
+.astronaut-container .email-modal {
+  color: #c0c0c0;
+  border-color: #c0c0c0;
+}
+
+.time-container .email-modal {
+  color: #ffd700;
+  border-color: #ffd700;
+  font-family: 'Bungee', cursive;
+}
+
+.dragon-container .email-modal {
+  color: #ff4500;
+  border-color: #ff4500;
+  font-family: 'Metal Mania', cursive;
+}
+
+.hero-container .email-modal {
+  color: #1e90ff;
+  border-color: #1e90ff;
+  font-family: 'Russo One', sans-serif;
+}
+
+.wizard-container .email-modal {
+  color: #9300d3;
+  border-color: #9300d3;
+  font-family: 'Creepster', cursive;
+}
+
+.ai-container .email-modal {
+  color: #00ff00;
+  border-color: #00ff00;
+}
+
+/* Original ContactInfo styles continue below */
 .contact-card {
   padding: 30px;
   border-radius: 12px;
@@ -196,15 +989,6 @@ defineProps({
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.contact-title h2 {
-  font-size: 1.3em;
-  opacity: 0.9;
-  margin-bottom: 8px;
-  font-weight: 500;
-  line-height: 1.4;
-  text-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
 .contact-title h3 {
@@ -382,161 +1166,83 @@ defineProps({
   letter-spacing: 0.3px;
 }
 
-/* Theme-specific section enhancements */
-.tattoo-section .skills-section,
-.tattoo-section .languages-section,
-.tattoo-section .summary-section {
-  background: linear-gradient(135deg, rgba(255,107,107,0.08) 0%, rgba(255,107,107,0.02) 100%);
-  border-left: 4px solid #ff6b6b;
-  font-style: italic;
-}
-
-.vet-section .skills-section,
-.vet-section .languages-section,
-.vet-section .summary-section {
-  background: linear-gradient(135deg, rgba(144,238,144,0.08) 0%, rgba(144,238,144,0.02) 100%);
-  border-left: 4px solid #90ee90;
-  border-radius: 20px;
-}
-
-.dance-section .skills-section,
-.dance-section .languages-section,
-.dance-section .summary-section {
-  background: linear-gradient(135deg, rgba(255,105,180,0.08) 0%, rgba(255,105,180,0.02) 100%);
-  border-left: 4px solid #ff69b4;
-}
-
-.chef-section .skills-section,
-.chef-section .languages-section,
-.chef-section .summary-section {
-  background: linear-gradient(135deg, rgba(255,165,0,0.08) 0%, rgba(255,165,0,0.02) 100%);
-  border-left: 4px solid #ffa500;
-  border-radius: 15px 0 15px 0;
-}
-
-.marine-section .skills-section,
-.marine-section .languages-section,
-.marine-section .summary-section {
-  background: linear-gradient(135deg, rgba(0,191,255,0.08) 0%, rgba(0,191,255,0.02) 100%);
-  border-left: 4px solid #00bfff;
-  border-radius: 0 20px 0 20px;
-}
-
-.gamer-section .skills-section,
-.gamer-section .languages-section,
-.gamer-section .summary-section {
-  background: linear-gradient(135deg, rgba(157,78,221,0.08) 0%, rgba(157,78,221,0.02) 100%);
-  border-left: 4px solid #9d4edd;
-}
-
-.artist-section .skills-section,
-.artist-section .languages-section,
-.artist-section .summary-section {
-  background: linear-gradient(135deg, rgba(221,160,221,0.08) 0%, rgba(221,160,221,0.02) 100%);
-  border-left: 4px solid #dda0dd;
-  border-radius: 25px 5px 25px 5px;
-}
-
-.astronaut-section .skills-section,
-.astronaut-section .languages-section,
-.astronaut-section .summary-section {
-  background: linear-gradient(135deg, rgba(192,192,192,0.08) 0%, rgba(192,192,192,0.02) 100%);
-  border-left: 4px solid #c0c0c0;
-  border: 2px solid rgba(192,192,192,0.3);
-  border-radius: 10px;
-}
-
-.time-section .skills-section,
-.time-section .languages-section,
-.time-section .summary-section {
-  background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, rgba(255,215,0,0.02) 100%);
-  border-left: 4px solid #ffd700;
-}
-
-.dragon-section .skills-section,
-.dragon-section .languages-section,
-.dragon-section .summary-section {
-  background: linear-gradient(135deg, rgba(255,69,0,0.08) 0%, rgba(255,69,0,0.02) 100%);
-  border-left: 4px solid #ff4500;
-  border-radius: 0 30px 0 30px;
-  position: relative;
-}
-
-.dragon-section .skills-section::before,
-.dragon-section .languages-section::before,
-.dragon-section .summary-section::before {
-  content: '🔥';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.2em;
-  opacity: 0.3;
-}
-
-.hero-section .skills-section,
-.hero-section .languages-section,
-.hero-section .summary-section {
-  background: linear-gradient(135deg, rgba(30,144,255,0.08) 0%, rgba(30,144,255,0.02) 100%);
-  border-left: 4px solid #1e90ff;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(30,144,255,0.3);
-}
-
-.wizard-section .skills-section,
-.wizard-section .languages-section,
-.wizard-section .summary-section {
-  background: linear-gradient(135deg, rgba(147,0,211,0.08) 0%, rgba(147,0,211,0.02) 100%);
-  border-left: 4px solid #9300d3;
-  border-radius: 50px 0 50px 0;
-  position: relative;
-}
-
-.wizard-section .skills-section::after,
-.wizard-section .languages-section::after,
-.wizard-section .summary-section::after {
-  content: '✨';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5em;
-  opacity: 0.4;
-  animation: sparkle 2s ease-in-out infinite alternate;
-}
-
-@keyframes sparkle {
-  0% { opacity: 0.2; transform: scale(1); }
-  100% { opacity: 0.8; transform: scale(1.2); }
-}
-
-.ai-section .skills-section,
-.ai-section .languages-section,
-.ai-section .summary-section {
-  background: linear-gradient(135deg, rgba(0,255,0,0.08) 0%, rgba(0,255,0,0.02) 100%);
-  border-left: 4px solid #00ff00;
-  border: 1px solid rgba(0,255,0,0.3);
-  position: relative;
-}
-
-.ai-section .skills-section::before,
-.ai-section .languages-section::before,
-.ai-section .summary-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 11px);
-  pointer-events: none;
-  animation: matrix 10s linear infinite;
-}
-
-@keyframes matrix {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(100px); }
-}
-
+/* Mobile responsive */
 @media (max-width: 768px) {
+  .email-contact-btn {
+    padding: 15px 25px;
+    font-size: 1em;
+    letter-spacing: 1px;
+  }
+
+  .email-icon {
+    font-size: 1.5em;
+  }
+
+  .email-text {
+    font-size: 0.9em;
+  }
+
+  /* Hide the theme-specific text on mobile */
+  .tattoo-section .email-text::after,
+  .vet-section .email-text::after,
+  .dance-section .email-text::after,
+  .chef-section .email-text::after,
+  .marine-section .email-text::after,
+  .gamer-section .email-text::after,
+  .artist-section .email-text::after,
+  .astronaut-section .email-text::after,
+  .time-section .email-text::after,
+  .dragon-section .email-text::after,
+  .hero-section .email-text::after,
+  .wizard-section .email-text::after,
+  .ai-section .email-text::after {
+    display: none;
+  }
+
+  .email-modal-overlay {
+    padding: 10px;
+  }
+
+  .email-modal {
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 20px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.4em;
+    letter-spacing: 2px;
+  }
+
+  .close-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2em;
+  }
+
+  .email-form {
+    padding: 20px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+    padding: 18px;
+    font-size: 1.1em;
+  }
+
+  .success-message,
+  .error-message {
+    padding: 25px 30px;
+    font-size: 0.9em;
+  }
+
   .contact-header {
     flex-direction: column;
     text-align: center;
@@ -565,24 +1271,26 @@ defineProps({
   .skills-list {
     justify-content: center;
   }
+}
 
-  /* Reset special transforms for mobile */
-  .dance-section .skills-section,
-  .dance-section .languages-section,
-  .dance-section .summary-section {
-    transform: none;
+/* Extra small screens */
+@media (max-width: 480px) {
+  .modal-header h2 {
+    font-size: 1.2em;
+    letter-spacing: 1px;
   }
 
-  .time-section .skills-section,
-  .time-section .languages-section,
-  .time-section .summary-section {
-    transform: none;
+  .form-input,
+  .form-textarea {
+    padding: 12px;
+    font-size: 0.9em;
   }
 
-  .gamer-section .skills-section,
-  .gamer-section .languages-section,
-  .gamer-section .summary-section {
-    clip-path: none;
+  .btn-cancel,
+  .btn-submit {
+    padding: 15px;
+    font-size: 1em;
+    letter-spacing: 1px;
   }
 }
 </style>
