@@ -1,44 +1,44 @@
 <template>
-  <div :class="theme.cardClass">
+  <div :class="[theme.cardClass, theme.sectionStyle]">
     <div class="links-header">
       <h2>{{ theme.linksTitle || 'Personal Links & Current Projects' }}</h2>
       <p class="links-subtitle">{{ theme.linksSubtitle || 'Connect with me and check out my active projects' }}</p>
     </div>
 
-    <div class="links-grid">
+    <div :class="['links-grid', theme.sectionStyle]">
       <a
           v-for="link in links"
           :key="link.name"
           :href="link.url"
           target="_blank"
           rel="noopener noreferrer"
-          :class="['link-card', theme.linkCardClass]"
+          :class="['link-card', theme.linkCardClass, theme.sectionStyle]"
       >
-        <div class="link-icon">
+        <div :class="['link-icon', theme.sectionStyle]">
           {{ link.icon }}
         </div>
         <div class="link-content">
           <h3>{{ link.name }}</h3>
           <p>{{ link.description }}</p>
-          <span class="link-status" :class="getStatusClass(link.status)">
+          <span :class="['link-status', getStatusClass(link.status)]">
             {{ link.status }}
           </span>
         </div>
-        <div class="link-arrow">
+        <div :class="['link-arrow', theme.sectionStyle]">
           →
         </div>
       </a>
     </div>
 
-    <div class="current-projects" v-if="theme.showProjects">
+    <div :class="['current-projects', theme.sectionStyle]" v-if="theme.showProjects">
       <h3>Current Active Projects</h3>
       <div class="projects-list">
         <div
             v-for="project in links.filter(l => l.type === 'project')"
             :key="project.name"
-            class="project-item"
+            :class="['project-item', theme.sectionStyle]"
         >
-          <div class="project-status-dot" :class="getStatusClass(project.status)"></div>
+          <div :class="['project-status-dot', getStatusClass(project.status)]"></div>
           <div class="project-info">
             <h4>{{ project.name }}</h4>
             <p>{{ project.description }}</p>
@@ -92,7 +92,7 @@ const getStatusClass = (status) => {
       0 0 90px rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
-  font-family: 'Space Mono', monospace;
+  font-family: inherit;
 }
 
 .links-card::before {
@@ -422,6 +422,195 @@ const getStatusClass = (status) => {
   letter-spacing: 0.3px;
 }
 
+/* Theme-specific link card styles */
+.tattoo-section .link-card {
+  border-left: 4px solid #ff6b6b;
+  font-style: italic;
+}
+
+.tattoo-section .link-icon {
+  transform: rotate(-5deg);
+}
+
+.vet-section .link-card {
+  border-left: 4px solid #90ee90;
+  border-radius: 20px;
+}
+
+.vet-section .link-icon {
+  border-radius: 50%;
+}
+
+.dance-section .link-card {
+  border-left: 4px solid #ff69b4;
+  animation: danceCardSway 3s ease-in-out infinite;
+}
+
+@keyframes danceCardSway {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  75% { transform: rotate(-1deg); }
+}
+
+.chef-section .link-card {
+  border-left: 4px solid #ffa500;
+  border-radius: 15px 0 15px 0;
+}
+
+.chef-section .link-icon {
+  border-radius: 15px 0 15px 0;
+}
+
+.marine-section .link-card {
+  border-left: 4px solid #00bfff;
+  border-radius: 0 20px 0 20px;
+}
+
+.marine-section .link-icon {
+  border-radius: 0 20px 0 20px;
+  animation: waveFloat 4s ease-in-out infinite;
+}
+
+@keyframes waveFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.gamer-section .link-card {
+  border-left: 4px solid #9d4edd;
+  position: relative;
+}
+
+.gamer-section .link-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 40%, rgba(157,78,221,0.1) 50%, transparent 60%);
+  animation: scanLine 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanLine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.artist-section .link-card {
+  border-left: 4px solid #dda0dd;
+  border-radius: 25px 5px 25px 5px;
+}
+
+.artist-section .link-icon {
+  border-radius: 25px 5px 25px 5px;
+  animation: artistPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes artistPulse {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(20deg); }
+}
+
+.astronaut-section .link-card {
+  border: 2px solid rgba(192,192,192,0.3);
+  border-left: 4px solid #c0c0c0;
+  border-radius: 10px;
+}
+
+.astronaut-section .link-icon {
+  animation: orbitFloat 6s ease-in-out infinite;
+}
+
+@keyframes orbitFloat {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-3px) translateX(3px); }
+  75% { transform: translateY(3px) translateX(-3px); }
+}
+
+.time-section .link-card {
+  border-left: 4px solid #ffd700;
+  position: relative;
+}
+
+.time-section .link-card::before {
+  animation: timeWarp 5s ease-in-out infinite;
+}
+
+@keyframes timeWarp {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.dragon-section .link-card {
+  border-left: 4px solid #ff4500;
+  border-radius: 0 30px 0 30px;
+  position: relative;
+}
+
+.dragon-section .link-card::after {
+  content: '🔥';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.2em;
+  opacity: 0.3;
+  animation: fireFlicker 2s ease-in-out infinite alternate;
+}
+
+@keyframes fireFlicker {
+  0% { opacity: 0.2; transform: scale(0.9); }
+  100% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.hero-section .link-card {
+  border-left: 4px solid #1e90ff;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(30,144,255,0.3);
+}
+
+.hero-section .link-icon {
+  animation: heroGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+  0% { box-shadow: 0 0 30px rgba(30,144,255,0.5); }
+  100% { box-shadow: 0 0 50px rgba(30,144,255,0.8); }
+}
+
+.wizard-section .link-card {
+  border-left: 4px solid #9300d3;
+  border-radius: 50px 0 50px 0;
+  position: relative;
+}
+
+.wizard-section .link-card::after {
+  content: '✨';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5em;
+  opacity: 0.4;
+  animation: sparkle 2s ease-in-out infinite alternate;
+}
+
+@keyframes sparkle {
+  0% { opacity: 0.2; transform: scale(1) rotate(0deg); }
+  100% { opacity: 0.8; transform: scale(1.2) rotate(180deg); }
+}
+
+.ai-section .link-card {
+  border: 1px solid rgba(0,255,0,0.3);
+  border-left: 4px solid #00ff00;
+  position: relative;
+}
+
+.ai-section .link-card::before {
+  background: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 11px);
+  animation: matrix 10s linear infinite;
+}
+
 @media (max-width: 768px) {
   .links-grid {
     grid-template-columns: 1fr;
@@ -458,6 +647,26 @@ const getStatusClass = (status) => {
     flex-direction: column;
     text-align: center;
     gap: 15px;
+  }
+
+  /* Reset animations for mobile */
+  .dance-section .link-card,
+  .marine-section .link-icon,
+  .gamer-section .link-card::after,
+  .artist-section .link-icon,
+  .astronaut-section .link-icon,
+  .time-section .link-card::before,
+  .dragon-section .link-card::after,
+  .hero-section .link-icon,
+  .wizard-section .link-card::after,
+  .ai-section .link-card::before {
+    animation: none;
+  }
+
+  .tattoo-section .link-icon,
+  .dance-section .link-card,
+  .time-section .link-card {
+    transform: none;
   }
 }
 </style>

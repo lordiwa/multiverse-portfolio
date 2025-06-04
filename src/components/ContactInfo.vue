@@ -1,5 +1,5 @@
 <template>
-  <div :class="theme.cardClass">
+  <div :class="[theme.cardClass, theme.sectionStyle]">
     <div class="contact-header">
       <div class="avatar">
         <span class="avatar-icon">{{ contact.avatar }}</span>
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="skills-section">
+    <div :class="['skills-section', theme.sectionStyle]">
       <h3>Main Skills</h3>
       <div class="skills-list">
         <span
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="languages-section">
+    <div :class="['languages-section', theme.sectionStyle]">
       <h3>Languages</h3>
       <div class="languages-list">
         <div
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="summary-section">
+    <div :class="['summary-section', theme.sectionStyle]">
       <h3>Summary</h3>
       <p>{{ contact.summary }}</p>
     </div>
@@ -91,7 +91,7 @@ defineProps({
       0 0 60px rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
-  font-family: 'Space Mono', monospace;
+  font-family: inherit;
 }
 
 .contact-card::before {
@@ -124,7 +124,7 @@ defineProps({
   margin-bottom: 30px;
   position: relative;
   z-index: 2;
-  flex-wrap: wrap; /* Allow wrapping to prevent layout breaking */
+  flex-wrap: wrap;
 }
 
 .avatar {
@@ -134,7 +134,7 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4em; /* Increase font size for better visibility */
+  font-size: 4em;
   border: 4px solid currentColor;
   background: linear-gradient(45deg,
   rgba(255, 255, 255, 0.1) 0%,
@@ -169,9 +169,9 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%; /* Ensure the icon spans the container */
-  height: 100%; /* Maintain proper scaling */
-  font-size: inherit; /* Use the inherited font size */
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
   text-shadow: 0 0 20px currentColor;
   animation: iconPulse 2s ease-in-out infinite alternate;
 }
@@ -182,8 +182,8 @@ defineProps({
 }
 
 .contact-title {
-  flex: 1; /* Allow the title to take up remaining space */
-  min-width: 0; /* Prevent overflow issues */
+  flex: 1;
+  min-width: 0;
 }
 
 .contact-title h1 {
@@ -208,11 +208,17 @@ defineProps({
 }
 
 .contact-title h3 {
-  max-width: 100%; /* Prevent the title from exceeding the container width */
-  word-wrap: break-word; /* Break long words if necessary */
-  overflow: hidden; /* Hide overflowing text */
-  text-overflow: ellipsis; /* Add "..." for overflowed text */
-  white-space: normal; /* Allow wrapping */
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-size: 1.3em;
+  opacity: 0.9;
+  margin-bottom: 8px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
 .location {
@@ -282,6 +288,7 @@ defineProps({
   padding: 20px;
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 }
 
 .skills-section h3,
@@ -375,6 +382,160 @@ defineProps({
   letter-spacing: 0.3px;
 }
 
+/* Theme-specific section enhancements */
+.tattoo-section .skills-section,
+.tattoo-section .languages-section,
+.tattoo-section .summary-section {
+  background: linear-gradient(135deg, rgba(255,107,107,0.08) 0%, rgba(255,107,107,0.02) 100%);
+  border-left: 4px solid #ff6b6b;
+  font-style: italic;
+}
+
+.vet-section .skills-section,
+.vet-section .languages-section,
+.vet-section .summary-section {
+  background: linear-gradient(135deg, rgba(144,238,144,0.08) 0%, rgba(144,238,144,0.02) 100%);
+  border-left: 4px solid #90ee90;
+  border-radius: 20px;
+}
+
+.dance-section .skills-section,
+.dance-section .languages-section,
+.dance-section .summary-section {
+  background: linear-gradient(135deg, rgba(255,105,180,0.08) 0%, rgba(255,105,180,0.02) 100%);
+  border-left: 4px solid #ff69b4;
+}
+
+.chef-section .skills-section,
+.chef-section .languages-section,
+.chef-section .summary-section {
+  background: linear-gradient(135deg, rgba(255,165,0,0.08) 0%, rgba(255,165,0,0.02) 100%);
+  border-left: 4px solid #ffa500;
+  border-radius: 15px 0 15px 0;
+}
+
+.marine-section .skills-section,
+.marine-section .languages-section,
+.marine-section .summary-section {
+  background: linear-gradient(135deg, rgba(0,191,255,0.08) 0%, rgba(0,191,255,0.02) 100%);
+  border-left: 4px solid #00bfff;
+  border-radius: 0 20px 0 20px;
+}
+
+.gamer-section .skills-section,
+.gamer-section .languages-section,
+.gamer-section .summary-section {
+  background: linear-gradient(135deg, rgba(157,78,221,0.08) 0%, rgba(157,78,221,0.02) 100%);
+  border-left: 4px solid #9d4edd;
+}
+
+.artist-section .skills-section,
+.artist-section .languages-section,
+.artist-section .summary-section {
+  background: linear-gradient(135deg, rgba(221,160,221,0.08) 0%, rgba(221,160,221,0.02) 100%);
+  border-left: 4px solid #dda0dd;
+  border-radius: 25px 5px 25px 5px;
+}
+
+.astronaut-section .skills-section,
+.astronaut-section .languages-section,
+.astronaut-section .summary-section {
+  background: linear-gradient(135deg, rgba(192,192,192,0.08) 0%, rgba(192,192,192,0.02) 100%);
+  border-left: 4px solid #c0c0c0;
+  border: 2px solid rgba(192,192,192,0.3);
+  border-radius: 10px;
+}
+
+.time-section .skills-section,
+.time-section .languages-section,
+.time-section .summary-section {
+  background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, rgba(255,215,0,0.02) 100%);
+  border-left: 4px solid #ffd700;
+}
+
+.dragon-section .skills-section,
+.dragon-section .languages-section,
+.dragon-section .summary-section {
+  background: linear-gradient(135deg, rgba(255,69,0,0.08) 0%, rgba(255,69,0,0.02) 100%);
+  border-left: 4px solid #ff4500;
+  border-radius: 0 30px 0 30px;
+  position: relative;
+}
+
+.dragon-section .skills-section::before,
+.dragon-section .languages-section::before,
+.dragon-section .summary-section::before {
+  content: '🔥';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.2em;
+  opacity: 0.3;
+}
+
+.hero-section .skills-section,
+.hero-section .languages-section,
+.hero-section .summary-section {
+  background: linear-gradient(135deg, rgba(30,144,255,0.08) 0%, rgba(30,144,255,0.02) 100%);
+  border-left: 4px solid #1e90ff;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(30,144,255,0.3);
+}
+
+.wizard-section .skills-section,
+.wizard-section .languages-section,
+.wizard-section .summary-section {
+  background: linear-gradient(135deg, rgba(147,0,211,0.08) 0%, rgba(147,0,211,0.02) 100%);
+  border-left: 4px solid #9300d3;
+  border-radius: 50px 0 50px 0;
+  position: relative;
+}
+
+.wizard-section .skills-section::after,
+.wizard-section .languages-section::after,
+.wizard-section .summary-section::after {
+  content: '✨';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5em;
+  opacity: 0.4;
+  animation: sparkle 2s ease-in-out infinite alternate;
+}
+
+@keyframes sparkle {
+  0% { opacity: 0.2; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(1.2); }
+}
+
+.ai-section .skills-section,
+.ai-section .languages-section,
+.ai-section .summary-section {
+  background: linear-gradient(135deg, rgba(0,255,0,0.08) 0%, rgba(0,255,0,0.02) 100%);
+  border-left: 4px solid #00ff00;
+  border: 1px solid rgba(0,255,0,0.3);
+  position: relative;
+}
+
+.ai-section .skills-section::before,
+.ai-section .languages-section::before,
+.ai-section .summary-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 11px);
+  pointer-events: none;
+  animation: matrix 10s linear infinite;
+}
+
+@keyframes matrix {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(100px); }
+}
+
 @media (max-width: 768px) {
   .contact-header {
     flex-direction: column;
@@ -392,7 +553,7 @@ defineProps({
     font-size: 2.2em;
   }
 
-  .contact-title h2 {
+  .contact-title h3 {
     font-size: 1.1em;
   }
 
@@ -403,6 +564,25 @@ defineProps({
 
   .skills-list {
     justify-content: center;
+  }
+
+  /* Reset special transforms for mobile */
+  .dance-section .skills-section,
+  .dance-section .languages-section,
+  .dance-section .summary-section {
+    transform: none;
+  }
+
+  .time-section .skills-section,
+  .time-section .languages-section,
+  .time-section .summary-section {
+    transform: none;
+  }
+
+  .gamer-section .skills-section,
+  .gamer-section .languages-section,
+  .gamer-section .summary-section {
+    clip-path: none;
   }
 }
 </style>
