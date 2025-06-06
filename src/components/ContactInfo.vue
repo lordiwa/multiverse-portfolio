@@ -9,17 +9,23 @@
     </div>
 
     <div class="contact-header">
-      <div class="avatar" @click="openMadLibs" title="Click for a fun Mad Libs game!">
-        <span class="avatar-icon">{{ contact.avatar }}</span>
-        <div class="avatar-overlay">
-          <span class="play-icon">🎮</span>
-          <span class="play-text">Mad Libs!</span>
+      <div class="avatar-games">
+        <div class="avatar" @click="openMadLibs" title="Click for a fun Mad Libs game!">
+          <span class="avatar-icon">{{ contact.avatar }}</span>
+          <div class="avatar-overlay">
+            <span class="play-icon">🎮</span>
+            <span class="play-text">Mad Libs!</span>
+          </div>
         </div>
-      </div>
-      <div class="contact-title">
-        <h1>{{ contact.name }}</h1>
-        <h3>{{ contact.title }}</h3>
-        <p class="location">{{ contact.location }}</p>
+
+        <!-- NEW: Tetris Game Trigger -->
+        <div class="tetris-trigger" @click="openTetris" title="Play Infinite Tetris!">
+          <span class="tetris-icon">🎮</span>
+          <div class="tetris-overlay">
+            <span class="tetris-play-icon">🔥</span>
+            <span class="tetris-play-text">Tetris!</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -165,12 +171,21 @@
         @close="closeMadLibs"
     />
   </div>
+ <!-- Tetris Game Component -->
+  <TetrisGame
+      :showTetris="showTetris"
+      :theme="theme"
+      :career="getCurrentCareer()"
+      @close="closeTetris"
+  />
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import emailjs from '@emailjs/browser'
 import MadLibsGame from './MadLibsGame.vue'
+import TetrisGame from './TetrisGame.vue'
+
 
 const props = defineProps({
   contact: {
@@ -182,7 +197,15 @@ const props = defineProps({
     required: true
   }
 })
+const showTetris = ref(false)
 
+const openTetris = () => {
+  showTetris.value = true
+}
+
+const closeTetris = () => {
+  showTetris.value = false
+}
 const showEmailModal = ref(false)
 const showMadLibs = ref(false)
 const isLoading = ref(false)
@@ -1270,6 +1293,138 @@ const sendEmail = async () => {
     padding: 15px;
     font-size: 1em;
     letter-spacing: 1px;
+  }
+  .avatar-games {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .tetris-trigger {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    border: 4px solid currentColor;
+    background: linear-gradient(45deg,
+    rgba(157, 78, 221, 0.2) 0%,
+    rgba(157, 78, 221, 0.1) 100%);
+    overflow: hidden;
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(255, 255, 255, 0.1),
+        0 0 60px rgba(157, 78, 221, 0.5);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .tetris-trigger:hover {
+    transform: scale(1.05);
+    box-shadow:
+        0 0 40px rgba(0, 0, 0, 0.6),
+        inset 0 0 40px rgba(255, 255, 255, 0.2),
+        0 0 80px rgba(157, 78, 221, 0.8);
+  }
+
+  .tetris-trigger::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #9d4edd, transparent, #9d4edd);
+    border-radius: 12px;
+    z-index: -1;
+    animation: tetrisGlow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes tetrisGlow {
+    0% { opacity: 0.5; filter: brightness(1); }
+    100% { opacity: 1; filter: brightness(1.5); }
+  }
+
+  .tetris-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(157, 78, 221, 0.6) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+  }
+
+  .tetris-trigger:hover .tetris-overlay {
+    opacity: 1;
+  }
+
+  .tetris-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: inherit;
+    text-shadow: 0 0 20px currentColor;
+    animation: tetrisPulse 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes tetrisPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+  }
+
+  .tetris-play-icon {
+    font-size: 0.4em;
+    margin-bottom: 2px;
+    animation: tetrisIconBounce 2s ease-in-out infinite;
+  }
+
+  .tetris-play-text {
+    font-size: 0.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Orbitron', monospace;
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  @keyframes tetrisIconBounce {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-3px) rotate(5deg); }
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .avatar-games {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .tetris-trigger {
+      width: 80px;
+      height: 80px;
+      font-size: 2.5em;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+    }
   }
 }
 </style>

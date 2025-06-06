@@ -144,15 +144,23 @@ export const profileData = {
       },
       {
         name: "Remoose Interactive",
-        url: "#",
+        url: "https://remoose.com", // Real URL if available, or "#" for demo
         description: "R&D Full Stack Engineering work",
         icon: "🚀",
         status: "In Progress",
         type: "project"
       },
       {
+        name: "Neural Tetris Protocol", // This is the one in your screenshot!
+        url: "#tetris", // Interactive link that triggers the game
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
+        type: "project"
+      },
+      {
         name: "Generative Art Experiments",
-        url: "#",
+        url: "#generative-art", // Could be interactive later
         description: "HTML5 and blockchain art projects",
         icon: "🎨",
         status: "Active",
@@ -160,7 +168,7 @@ export const profileData = {
       },
       {
         name: "AI Integration Projects",
-        url: "#",
+        url: "#ai-integration", // Could be interactive later
         description: "Mixing interactive development with AI",
         icon: "🤖",
         status: "Planning",
@@ -273,6 +281,14 @@ export const profileData = {
         icon: "🎓",
         status: "Planning",
         type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
+        type: "project"
       }
     ]
   },
@@ -380,6 +396,14 @@ export const profileData = {
         description: "Annual event merging technology and conservation",
         icon: "🎤",
         status: "Planning",
+        type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
         type: "project"
       }
     ]
@@ -489,6 +513,14 @@ export const profileData = {
         icon: "🥽",
         status: "Beta",
         type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
+        type: "project"
       }
     ]
   },
@@ -586,34 +618,26 @@ export const profileData = {
     links: [
       {
         name: "Raíces Restaurant",
-        url: "#",
+        url: "https://your-restaurant.com", // Replace with real URL
         description: "Award-winning modern Ecuadorian restaurant",
         icon: "🍽️",
         status: "Active",
         type: "business"
       },
       {
-        name: "Culinary Innovation Lab",
-        url: "#",
-        description: "Food technology research and development",
-        icon: "🔬",
+        name: "Culinary Block Tower",
+        url: "#tetris", // Chef-themed Tetris
+        description: "Strategic ingredient stacking game for kitchen coordination",
+        icon: "🧩",
         status: "Active",
         type: "project"
       },
       {
-        name: "Chef's Table Documentary",
-        url: "#",
-        description: "Netflix feature on Ecuadorian cuisine revolution",
-        icon: "🎥",
-        status: "In Progress",
-        type: "project"
-      },
-      {
-        name: "Sustainable Gastronomy Course",
-        url: "#",
-        description: "Online masterclass on sustainable cooking",
-        icon: "🌱",
-        status: "Planning",
+        name: "Culinary Innovation Lab",
+        url: "#innovation",
+        description: "Food technology research and development",
+        icon: "🔬",
+        status: "Active",
         type: "project"
       }
     ]
@@ -723,6 +747,14 @@ export const profileData = {
         icon: "🥽",
         status: "Beta",
         type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
+        type: "project"
       }
     ]
   },
@@ -802,15 +834,23 @@ export const profileData = {
     links: [
       {
         name: "Twitch Channel",
-        url: "#",
+        url: "https://twitch.tv/yourhandle", // Replace with real URL
         description: "Daily gaming streams and tournaments",
         icon: "📺",
         status: "Active",
         type: "social"
       },
       {
+        name: "Infinite Tetris Challenge",
+        url: "#tetris", // Interactive link
+        description: "Progressive difficulty Tetris with unlimited levels",
+        icon: "🎮",
+        status: "Active",
+        type: "project"
+      },
+      {
         name: "Matovelle Gaming Team",
-        url: "#",
+        url: "https://your-gaming-team.com", // Replace or use "#"
         description: "Professional esports organization",
         icon: "🏆",
         status: "Active",
@@ -818,7 +858,7 @@ export const profileData = {
       },
       {
         name: "Gaming Analytics Platform",
-        url: "#",
+        url: "#analytics", // Could be interactive
         description: "Performance analysis tools for pro players",
         icon: "📊",
         status: "Active",
@@ -826,7 +866,7 @@ export const profileData = {
       },
       {
         name: "Gaming Hardware Line",
-        url: "#",
+        url: "#hardware", // Could be interactive
         description: "Custom gaming peripherals and equipment",
         icon: "⌨️",
         status: "In Progress",
@@ -913,6 +953,14 @@ export const profileData = {
         icon: "🎓",
         status: "Planning",
         type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
+        type: "project"
       }
     ]
   },
@@ -965,15 +1013,23 @@ export const profileData = {
     links: [
       {
         name: "AI Research Blog",
-        url: "#",
+        url: "#research",
         description: "Insights into the future of AI",
         icon: "📊",
         status: "Active",
         type: "project"
       },
       {
+        name: "Quantum Block Algorithm",
+        url: "#tetris", // AI-themed Tetris
+        description: "Advanced AI training through geometric pattern recognition",
+        icon: "🧮",
+        status: "Active",
+        type: "project"
+      },
+      {
         name: "AI Ethics Framework",
-        url: "#",
+        url: "#ethics",
         description: "Guidelines for ethical AI development",
         icon: "⚖️",
         status: "Active",
@@ -1030,17 +1086,25 @@ export const profileData = {
     links: [
       {
         name: "Magical Research Journal",
-        url: "#",
+        url: "#research",
         description: "Latest advancements in magical research",
         icon: "📜",
         status: "Active",
         type: "project"
       },
       {
-        name: "Wizard Academy",
-        url: "#",
-        description: "Learn magic from the best wizards",
+        name: "Enchanted Block Puzzle",
+        url: "#tetris", // Interactive Tetris with wizard theme
+        description: "Magical block arrangement ritual for mind sharpening",
         icon: "✨",
+        status: "Active",
+        type: "project"
+      },
+      {
+        name: "Wizard Academy",
+        url: "#academy",
+        description: "Learn magic from the best wizards",
+        icon: "🏫",
         status: "Active",
         type: "project"
       }
@@ -1094,15 +1158,23 @@ export const profileData = {
     links: [
       {
         name: "Hero Training Program",
-        url: "#",
+        url: "#training",
         description: "Join the next generation of heroes",
         icon: "💪",
         status: "Active",
         type: "project"
       },
       {
+        name: "Heroic Block Defense",
+        url: "#tetris", // Superhero-themed Tetris
+        description: "Strategic defense training through block coordination",
+        icon: "🛡️",
+        status: "Active",
+        type: "project"
+      },
+      {
         name: "Global Defense Network",
-        url: "#",
+        url: "#defense",
         description: "Real-time updates on global threats",
         icon: "🌍",
         status: "Active",
@@ -1171,6 +1243,14 @@ export const profileData = {
         icon: "🌳",
         status: "Active",
         type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
+        type: "project"
       }
     ]
   },
@@ -1235,6 +1315,14 @@ export const profileData = {
         icon: "📖",
         status: "Planning",
         type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
+        type: "project"
       }
     ]
   },
@@ -1298,6 +1386,14 @@ export const profileData = {
         description: "Behind-the-scenes of the first human Mars mission",
         icon: "🎥",
         status: "In Progress",
+        type: "project"
+      },
+      {
+        name: "Neural Tetris Protocol",
+        url: "#tetris",
+        description: "AI-enhanced infinite progression Tetris game",
+        icon: "🧠",
+        status: "Active",
         type: "project"
       }
     ]

@@ -1,3 +1,4 @@
+<!-- src/components/PersonalLinks.vue - Complete with all styles -->
 <template>
   <div :class="[theme.cardClass, theme.sectionStyle]">
     <div class="links-header">
@@ -6,13 +7,15 @@
     </div>
 
     <div :class="['links-grid', theme.sectionStyle]">
-      <a
+      <component
           v-for="link in links"
           :key="link.name"
-          :href="link.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          :class="['link-card', theme.linkCardClass, theme.sectionStyle]"
+          :is="link.url.startsWith('#') ? 'button' : 'a'"
+          :href="link.url.startsWith('#') ? undefined : link.url"
+          :target="link.url.startsWith('#') ? undefined : '_blank'"
+          :rel="link.url.startsWith('#') ? undefined : 'noopener noreferrer'"
+          @click="link.url.startsWith('#') ? handleInteractiveLink(link.url) : null"
+          :class="['link-card', theme.linkCardClass, theme.sectionStyle, { 'interactive-link': link.url.startsWith('#') }]"
       >
         <div :class="['link-icon', theme.sectionStyle]">
           {{ link.icon }}
@@ -25,32 +28,64 @@
           </span>
         </div>
         <div :class="['link-arrow', theme.sectionStyle]">
-          →
+          {{ link.url.startsWith('#') ? '▶' : '→' }}
         </div>
-      </a>
+      </component>
     </div>
 
     <div :class="['current-projects', theme.sectionStyle]" v-if="theme.showProjects">
       <h3>Current Active Projects</h3>
       <div class="projects-list">
-        <div
+        <component
             v-for="project in links.filter(l => l.type === 'project')"
             :key="project.name"
-            :class="['project-item', theme.sectionStyle]"
+            :is="project.url.startsWith('#') ? 'button' : 'div'"
+            @click="project.url.startsWith('#') ? handleInteractiveLink(project.url) : null"
+            :class="['project-item', theme.sectionStyle, { 'interactive-project': project.url.startsWith('#') }]"
         >
           <div :class="['project-status-dot', getStatusClass(project.status)]"></div>
           <div class="project-info">
             <h4>{{ project.name }}</h4>
             <p>{{ project.description }}</p>
           </div>
-        </div>
+        </component>
       </div>
     </div>
+
+    <!-- Tetris Game Component -->
+    <TetrisGame
+        :showTetris="showTetris"
+        :theme="theme"
+        :career="getCurrentCareer()"
+        @close="closeTetris"
+    />
+
+    <!-- Mad Libs Game Component -->
+    <MadLibsGame
+        :showMadLibs="showMadLibs"
+        :theme="theme"
+        :career="getCurrentCareer()"
+        @close="closeMadLibs"
+    />
+
+    <!-- Coming Soon Modal -->
+    <ComingSoonModal
+        :show="showComingSoon"
+        :linkUrl="comingSoonUrl"
+        :theme="theme"
+        :career="getCurrentCareer()"
+        @close="closeComingSoon"
+    />
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { ref } from 'vue'
+import TetrisGame from './TetrisGame.vue'
+import MadLibsGame from './MadLibsGame.vue'
+import ComingSoonModal from './ComingSoonModal.vue'
+
+const props = defineProps({
   links: {
     type: Array,
     required: true
@@ -60,6 +95,12 @@ defineProps({
     required: true
   }
 })
+
+// Game and modal states
+const showTetris = ref(false)
+const showMadLibs = ref(false)
+const showComingSoon = ref(false)
+const comingSoonUrl = ref('')
 
 const getStatusClass = (status) => {
   const statusMap = {
@@ -73,9 +114,93 @@ const getStatusClass = (status) => {
   }
   return statusMap[status] || 'status-default'
 }
+
+const getCurrentCareer = () => {
+  const containerClass = props.theme.containerClass
+  if (containerClass.includes('tech')) return 'current'
+  if (containerClass.includes('tattoo')) return 'tattoo'
+  if (containerClass.includes('vet')) return 'vet'
+  if (containerClass.includes('dance')) return 'dance'
+  if (containerClass.includes('chef')) return 'chef'
+  if (containerClass.includes('marine')) return 'marine'
+  if (containerClass.includes('gamer')) return 'gamer'
+  if (containerClass.includes('artist')) return 'artist'
+  if (containerClass.includes('astronaut')) return 'astronaut'
+  if (containerClass.includes('time')) return 'timeTraveler'
+  if (containerClass.includes('dragon')) return 'dragonTamer'
+  if (containerClass.includes('hero')) return 'superhero'
+  if (containerClass.includes('wizard')) return 'wizard'
+  if (containerClass.includes('ai')) return 'aiOverlord'
+  return 'current'
+}
+
+const handleInteractiveLink = (url) => {
+  // Close any open modals/games first
+  showTetris.value = false
+  showMadLibs.value = false
+  showComingSoon.value = false
+
+  // Handle different interactive links
+  switch (url) {
+    case '#tetris':
+    case '#neural-tetris':
+    case '#infinite-tetris':
+      openTetris()
+      break
+    case '#madlibs':
+    case '#mad-libs':
+      openMadLibs()
+      break
+    case '#generative-art':
+    case '#ai-integration':
+    case '#analytics':
+    case '#research':
+    case '#academy':
+    case '#ethics':
+    case '#innovation':
+    case '#training':
+    case '#defense':
+    case '#hardware':
+      // Show coming soon modal for these features
+      openComingSoon(url)
+      break
+    default:
+      console.log('Unknown interactive link:', url)
+      // Show generic coming soon
+      openComingSoon(url)
+  }
+}
+
+const openTetris = () => {
+  showTetris.value = true
+}
+
+const closeTetris = () => {
+  showTetris.value = false
+}
+
+const openMadLibs = () => {
+  showMadLibs.value = true
+}
+
+const closeMadLibs = () => {
+  showMadLibs.value = false
+}
+
+const openComingSoon = (url) => {
+  comingSoonUrl.value = url
+  showComingSoon.value = true
+}
+
+const closeComingSoon = () => {
+  showComingSoon.value = false
+  comingSoonUrl.value = ''
+}
 </script>
 
 <style scoped>
+/* COMPLETE STYLING - Copy from your original PersonalLinks.vue and add interactive styles */
+
 .links-card {
   padding: 35px;
   border-radius: 12px;
@@ -422,195 +547,75 @@ const getStatusClass = (status) => {
   letter-spacing: 0.3px;
 }
 
-/* Theme-specific link card styles */
-.tattoo-section .link-card {
-  border-left: 4px solid #ff6b6b;
-  font-style: italic;
-}
-
-.tattoo-section .link-icon {
-  transform: rotate(-5deg);
-}
-
-.vet-section .link-card {
-  border-left: 4px solid #90ee90;
-  border-radius: 20px;
-}
-
-.vet-section .link-icon {
-  border-radius: 50%;
-}
-
-.dance-section .link-card {
-  border-left: 4px solid #ff69b4;
-  animation: danceCardSway 3s ease-in-out infinite;
-}
-
-@keyframes danceCardSway {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(1deg); }
-  75% { transform: rotate(-1deg); }
-}
-
-.chef-section .link-card {
-  border-left: 4px solid #ffa500;
-  border-radius: 15px 0 15px 0;
-}
-
-.chef-section .link-icon {
-  border-radius: 15px 0 15px 0;
-}
-
-.marine-section .link-card {
-  border-left: 4px solid #00bfff;
-  border-radius: 0 20px 0 20px;
-}
-
-.marine-section .link-icon {
-  border-radius: 0 20px 0 20px;
-  animation: waveFloat 4s ease-in-out infinite;
-}
-
-@keyframes waveFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-.gamer-section .link-card {
-  border-left: 4px solid #9d4edd;
+/* INTERACTIVE LINK STYLES */
+.interactive-link,
+.interactive-project {
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
   position: relative;
+  overflow: hidden;
 }
 
-.gamer-section .link-card::after {
+.interactive-link::before,
+.interactive-project::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent 40%, rgba(157,78,221,0.1) 50%, transparent 60%);
-  animation: scanLine 3s linear infinite;
-  pointer-events: none;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+  transparent,
+  rgba(255, 255, 255, 0.1),
+  transparent
+  );
+  transition: left 0.5s ease;
+  z-index: 1;
 }
 
-@keyframes scanLine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+.interactive-link:hover::before,
+.interactive-project:hover::before {
+  left: 100%;
 }
 
-.artist-section .link-card {
-  border-left: 4px solid #dda0dd;
-  border-radius: 25px 5px 25px 5px;
+.interactive-link:hover .link-arrow,
+.interactive-project:hover .link-arrow {
+  animation: interactiveArrowPulse 0.6s ease-in-out infinite;
 }
 
-.artist-section .link-icon {
-  border-radius: 25px 5px 25px 5px;
-  animation: artistPulse 2s ease-in-out infinite alternate;
+@keyframes interactiveArrowPulse {
+  0%, 100% { transform: translateX(0px) scale(1); }
+  50% { transform: translateX(8px) scale(1.2); }
 }
 
-@keyframes artistPulse {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(20deg); }
+/* Special styling for Tetris links */
+.interactive-link .link-content h3:contains("Tetris"),
+.interactive-link .link-content h3:contains("Neural"),
+.interactive-link .link-content h3:contains("Block") {
+  color: #9d4edd !important;
 }
 
-.astronaut-section .link-card {
-  border: 2px solid rgba(192,192,192,0.3);
-  border-left: 4px solid #c0c0c0;
-  border-radius: 10px;
+.interactive-link:has(.link-content h3:contains("Tetris")),
+.interactive-link:has(.link-content h3:contains("Neural")),
+.interactive-link:has(.link-content h3:contains("Block")) {
+  border-left: 4px solid #9d4edd !important;
+  background: linear-gradient(135deg,
+  rgba(157, 78, 221, 0.1) 0%,
+  rgba(157, 78, 221, 0.05) 100%) !important;
 }
 
-.astronaut-section .link-icon {
-  animation: orbitFloat 6s ease-in-out infinite;
+.interactive-link:hover:has(.link-content h3:contains("Tetris")),
+.interactive-link:hover:has(.link-content h3:contains("Neural")),
+.interactive-link:hover:has(.link-content h3:contains("Block")) {
+  box-shadow: 0 0 30px rgba(157, 78, 221, 0.4) !important;
+  border-left-color: #9d4edd !important;
 }
 
-@keyframes orbitFloat {
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  25% { transform: translateY(-3px) translateX(3px); }
-  75% { transform: translateY(3px) translateX(-3px); }
-}
-
-.time-section .link-card {
-  border-left: 4px solid #ffd700;
-  position: relative;
-}
-
-.time-section .link-card::before {
-  animation: timeWarp 5s ease-in-out infinite;
-}
-
-@keyframes timeWarp {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-}
-
-.dragon-section .link-card {
-  border-left: 4px solid #ff4500;
-  border-radius: 0 30px 0 30px;
-  position: relative;
-}
-
-.dragon-section .link-card::after {
-  content: '🔥';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.2em;
-  opacity: 0.3;
-  animation: fireFlicker 2s ease-in-out infinite alternate;
-}
-
-@keyframes fireFlicker {
-  0% { opacity: 0.2; transform: scale(0.9); }
-  100% { opacity: 0.5; transform: scale(1.1); }
-}
-
-.hero-section .link-card {
-  border-left: 4px solid #1e90ff;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(30,144,255,0.3);
-}
-
-.hero-section .link-icon {
-  animation: heroGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes heroGlow {
-  0% { box-shadow: 0 0 30px rgba(30,144,255,0.5); }
-  100% { box-shadow: 0 0 50px rgba(30,144,255,0.8); }
-}
-
-.wizard-section .link-card {
-  border-left: 4px solid #9300d3;
-  border-radius: 50px 0 50px 0;
-  position: relative;
-}
-
-.wizard-section .link-card::after {
-  content: '✨';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5em;
-  opacity: 0.4;
-  animation: sparkle 2s ease-in-out infinite alternate;
-}
-
-@keyframes sparkle {
-  0% { opacity: 0.2; transform: scale(1) rotate(0deg); }
-  100% { opacity: 0.8; transform: scale(1.2) rotate(180deg); }
-}
-
-.ai-section .link-card {
-  border: 1px solid rgba(0,255,0,0.3);
-  border-left: 4px solid #00ff00;
-  position: relative;
-}
-
-.ai-section .link-card::before {
-  background: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 11px);
-  animation: matrix 10s linear infinite;
-}
-
+/* Mobile responsive */
 @media (max-width: 768px) {
   .links-grid {
     grid-template-columns: 1fr;
@@ -649,24 +654,19 @@ const getStatusClass = (status) => {
     gap: 15px;
   }
 
-  /* Reset animations for mobile */
-  .dance-section .link-card,
-  .marine-section .link-icon,
-  .gamer-section .link-card::after,
-  .artist-section .link-icon,
-  .astronaut-section .link-icon,
-  .time-section .link-card::before,
-  .dragon-section .link-card::after,
-  .hero-section .link-icon,
-  .wizard-section .link-card::after,
-  .ai-section .link-card::before {
-    animation: none;
+  .interactive-link,
+  .interactive-project {
+    padding: 20px;
+    touch-action: manipulation;
   }
 
-  .tattoo-section .link-icon,
-  .dance-section .link-card,
-  .time-section .link-card {
+  .interactive-link:hover {
     transform: none;
+  }
+
+  .interactive-link:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.15);
   }
 }
 </style>
