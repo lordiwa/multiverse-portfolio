@@ -9,8 +9,12 @@
     </div>
 
     <div class="contact-header">
-      <div class="avatar">
+      <div class="avatar" @click="openMadLibs" title="Click for a fun Mad Libs game!">
         <span class="avatar-icon">{{ contact.avatar }}</span>
+        <div class="avatar-overlay">
+          <span class="play-icon">🎮</span>
+          <span class="play-text">Mad Libs!</span>
+        </div>
       </div>
       <div class="contact-title">
         <h1>{{ contact.name }}</h1>
@@ -152,12 +156,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Mad Libs Game Component -->
+    <MadLibsGame
+        :showMadLibs="showMadLibs"
+        :theme="theme"
+        :career="getCurrentCareer()"
+        @close="closeMadLibs"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import emailjs from '@emailjs/browser'
+import MadLibsGame from './MadLibsGame.vue'
 
 const props = defineProps({
   contact: {
@@ -171,6 +184,7 @@ const props = defineProps({
 })
 
 const showEmailModal = ref(false)
+const showMadLibs = ref(false)
 const isLoading = ref(false)
 const showSuccess = ref(false)
 const showError = ref(false)
@@ -245,6 +259,14 @@ const closeEmailModal = () => {
   showError.value = false
   isLoading.value = false
   showEmailModal.value = false
+}
+
+const openMadLibs = () => {
+  showMadLibs.value = true
+}
+
+const closeMadLibs = () => {
+  showMadLibs.value = false
 }
 
 const sendEmail = async () => {
@@ -385,6 +407,113 @@ const sendEmail = async () => {
   font-weight: 900;
 }
 
+/* Avatar Styling with Mad Libs Interaction */
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4em;
+  border: 4px solid currentColor;
+  background: linear-gradient(45deg,
+  rgba(255, 255, 255, 0.1) 0%,
+  rgba(255, 255, 255, 0.05) 100%);
+  overflow: hidden;
+  box-shadow:
+      0 0 30px rgba(0, 0, 0, 0.5),
+      inset 0 0 30px rgba(255, 255, 255, 0.1),
+      0 0 60px currentColor;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow:
+      0 0 40px rgba(0, 0, 0, 0.6),
+      inset 0 0 40px rgba(255, 255, 255, 0.2),
+      0 0 80px currentColor;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg,
+  rgba(0, 0, 0, 0.8) 0%,
+  rgba(0, 0, 0, 0.6) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.avatar:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.play-icon {
+  font-size: 0.5em;
+  margin-bottom: 2px;
+  animation: gameIconBounce 2s ease-in-out infinite;
+}
+
+.play-text {
+  font-size: 0.25em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 0 10px currentColor;
+}
+
+@keyframes gameIconBounce {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-3px) scale(1.1); }
+}
+
+.avatar::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, currentColor, transparent, currentColor);
+  border-radius: 12px;
+  z-index: -1;
+  animation: borderGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes borderGlow {
+  0% { opacity: 0.5; filter: brightness(1); }
+  100% { opacity: 1; filter: brightness(1.5); }
+}
+
+.avatar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
+  text-shadow: 0 0 20px currentColor;
+  animation: iconPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes iconPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
 /* Loading spinner */
 .loading-spinner {
   display: inline-block;
@@ -405,85 +534,6 @@ const sendEmail = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Theme-specific button text */
-.tattoo-section .email-text::after {
-  content: " (Ink Message)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.vet-section .email-text::after {
-  content: " (Animal Signal)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.dance-section .email-text::after {
-  content: " (Rhythm Note)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.chef-section .email-text::after {
-  content: " (Recipe Request)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.marine-section .email-text::after {
-  content: " (Ocean Wave)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.gamer-section .email-text::after {
-  content: " (Player Chat)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.artist-section .email-text::after {
-  content: " (Art Request)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.astronaut-section .email-text::after {
-  content: " (Space Signal)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.time-section .email-text::after {
-  content: " (Time Portal)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.dragon-section .email-text::after {
-  content: " (Dragon Call)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.hero-section .email-text::after {
-  content: " (Hero Signal)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.wizard-section .email-text::after {
-  content: " (Magic Scroll)";
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.ai-section .email-text::after {
-  content: " (AI Protocol)";
-  font-size: 0.8em;
-  opacity: 0.8;
 }
 
 /* Email Modal Styling */
@@ -866,7 +916,7 @@ const sendEmail = async () => {
   border-color: #00ff00;
 }
 
-/* Original ContactInfo styles continue below */
+/* Original ContactInfo styles */
 .contact-card {
   padding: 30px;
   border-radius: 12px;
@@ -918,60 +968,6 @@ const sendEmail = async () => {
   position: relative;
   z-index: 2;
   flex-wrap: wrap;
-}
-
-.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 4em;
-  border: 4px solid currentColor;
-  background: linear-gradient(45deg,
-  rgba(255, 255, 255, 0.1) 0%,
-  rgba(255, 255, 255, 0.05) 100%);
-  overflow: hidden;
-  box-shadow:
-      0 0 30px rgba(0, 0, 0, 0.5),
-      inset 0 0 30px rgba(255, 255, 255, 0.1),
-      0 0 60px currentColor;
-  position: relative;
-}
-
-.avatar::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, currentColor, transparent, currentColor);
-  border-radius: 12px;
-  z-index: -1;
-  animation: borderGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes borderGlow {
-  0% { opacity: 0.5; filter: brightness(1); }
-  100% { opacity: 1; filter: brightness(1.5); }
-}
-
-.avatar-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: inherit;
-  text-shadow: 0 0 20px currentColor;
-  animation: iconPulse 2s ease-in-out infinite alternate;
-}
-
-@keyframes iconPulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.1); }
 }
 
 .contact-title {
@@ -1180,23 +1176,6 @@ const sendEmail = async () => {
 
   .email-text {
     font-size: 0.9em;
-  }
-
-  /* Hide the theme-specific text on mobile */
-  .tattoo-section .email-text::after,
-  .vet-section .email-text::after,
-  .dance-section .email-text::after,
-  .chef-section .email-text::after,
-  .marine-section .email-text::after,
-  .gamer-section .email-text::after,
-  .artist-section .email-text::after,
-  .astronaut-section .email-text::after,
-  .time-section .email-text::after,
-  .dragon-section .email-text::after,
-  .hero-section .email-text::after,
-  .wizard-section .email-text::after,
-  .ai-section .email-text::after {
-    display: none;
   }
 
   .email-modal-overlay {
