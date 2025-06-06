@@ -136,7 +136,7 @@ export const profileData = {
       },
       {
         name: "GitHub Portfolio",
-        url: "https://github.com/rmatovelle",
+        url: "https://github.com/lordiwa",
         description: "Open source projects and code samples",
         icon: "🐙",
         status: "Active",
