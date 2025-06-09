@@ -24,7 +24,6 @@ html, body {
   line-height: 1.6;
   transition: all 0.3s ease;
   overflow-x: hidden;
-  /* Prevent mobile scroll bounce */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -35,27 +34,29 @@ html, body {
   transition: all 0.5s ease;
   margin: 0;
   position: relative;
-  overflow: hidden;
-  min-height: -webkit-fill-available;
+  overflow-x: hidden; /* Allow vertical scrolling */
+  overflow-y: auto;
+  touch-action: pan-y; /* Enable touch scrolling */
 }
+
 @media (max-width: 768px) {
   html {
-    height: -webkit-fill-available;
+    height: 100%;
   }
 
   body {
     position: relative;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    height: -webkit-fill-available;
+    height: 100%;
   }
 
   #app {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    min-height: -webkit-fill-available;
     overflow-x: hidden;
+    overflow-y: auto; /* Ensure scrolling on mobile */
   }
 }
 

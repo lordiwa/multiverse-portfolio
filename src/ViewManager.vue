@@ -1,4 +1,4 @@
-<!-- ViewManager.vue - Handles all view transitions -->
+<!-- ViewManager.vue - Fixed Mobile Scrolling Issues -->
 <template>
   <div class="view-manager" :class="currentTheme?.containerClass">
     <!-- Main Portfolio View -->
@@ -182,21 +182,57 @@ html, body {
   font-family: 'Space Mono', 'Courier New', monospace;
   line-height: 1.6;
   transition: all 0.3s ease;
-  overflow-x: hidden;
-  /* Prevent mobile scroll bounce */
+  /* FIXED: Remove overflow-x: hidden from body to allow proper scrolling */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+  /* FIXED: Set proper height without restrictions */
+  height: auto;
+  min-height: 100vh;
 }
 
 .view-manager {
   min-height: 100vh;
   width: 100vw;
-  transition: all 0.5s ease;
   margin: 0;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto; /* Allow vertical scrolling */
+  touch-action: pan-y; /* Enable touch scrolling */
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Space Mono', 'Courier New', monospace;
+  line-height: 1.6;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  height: auto;
+  min-height: 100vh; /* Ensure proper height */
+  overflow-x: hidden;
+  overflow-y: auto; /* Allow vertical scrolling */
+  touch-action: pan-y; /* Enable touch scrolling */
+}
+
+@media (max-width: 768px) {
+  .view-manager {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto; /* Ensure scrolling on mobile */
+  }
+
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto; /* Allow scrolling */
+  }
+}
+
+/* FIXED: Remove conflicting height rules */
 /* Keep all your existing starfield animations */
 .view-manager::before {
   content: '';
@@ -444,7 +480,7 @@ html, body {
 
 /* Include all other theme styles from your original App.vue... */
 
-/* Mobile optimizations */
+/* FIXED: Mobile optimizations with proper scrolling */
 @media (max-width: 768px) {
   .universe-switcher {
     top: 10px;
@@ -462,27 +498,28 @@ html, body {
     padding: 100px 15px 15px 15px;
   }
 
-  /* Ensure mobile viewport doesn't get cut off */
-  .view-manager {
+  /* FIXED: Ensure content doesn't get cut off */
+  .portfolio-view {
     min-height: 100vh;
-    min-height: -webkit-fill-available;
+    padding-bottom: 20px;
   }
 }
 
-/* Prevent mobile bounce and ensure proper scrolling */
-@media (max-width: 768px) {
-  body {
-    position: relative;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+/* FIXED: Additional mobile safety */
+@media (max-width: 480px) {
+  .portfolio-container {
+    padding: 90px 10px 30px 10px;
   }
 
-  .view-manager {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    overflow-x: hidden;
+  .portfolio-view {
+    padding-bottom: 30px;
+  }
+}
+
+/* FIXED: Landscape orientation */
+@media (max-height: 600px) and (orientation: landscape) {
+  .portfolio-container {
+    padding: 80px 15px 20px 15px;
   }
 }
 </style>

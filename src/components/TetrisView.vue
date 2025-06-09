@@ -102,9 +102,9 @@
 
       <!-- Mobile Controls -->
       <div class="mobile-controls">
-        <div class="control-instructions">
-          <span>Swipe: Move • Swipe Up: Rotate • Swipe Down: Drop</span>
-        </div>
+<!--        <div class="control-instructions">-->
+<!--          <span>Swipe: Move • Swipe Up: Rotate • Swipe Down: Drop</span>-->
+<!--        </div>-->
         <div class="control-row">
           <button @click="rotatePieceHandler" :class="['control-btn', theme.sectionStyle]" :disabled="!gameRunning || paused">
             ↻<span class="btn-label">Rotate</span>
@@ -206,7 +206,7 @@ const touchThreshold = 30
 
 // Responsive sizing
 const updateCellSize = () => {
-  const isMobile = window.innerWidth < 768
+  const isMobile = window.innerWidth < 740
   cellSize.value = isMobile ? 18 : 22
 }
 
@@ -214,6 +214,14 @@ onMounted(() => {
   updateCellSize()
   window.addEventListener('resize', updateCellSize)
   window.addEventListener('keydown', handleKeyPress)
+
+  // Set the --vh variable for mobile viewport height
+  const setVhVariable = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+  setVhVariable();
+  window.addEventListener('resize', setVhVariable);
 })
 
 onUnmounted(() => {
@@ -601,16 +609,28 @@ watch(() => props.career, () => {
 </script>
 
 <style scoped>
-.tetris-view {
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  width: 100%;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+@media (orientation: portrait) {
+  .game-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 20px !important;
+  }
+
+  .game-board-container,
+  .game-stats {
+    width: 100% !important;
+    max-width: 350px !important;
+  }
+
+  .control-buttons {
+    flex-direction: row !important;
+    gap: 15px !important;
+  }
+}
+@media (max-width: 740px) {
+  .tetris-view {
+    height: calc(var(--vh, 1vh) * 100); /* Adjust for mobile viewport height */
+  }
 }
 
 .tetris-header {
@@ -774,7 +794,7 @@ watch(() => props.career, () => {
 
 .game-stats {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 15px;
   min-width: 200px;
 }
@@ -879,7 +899,7 @@ watch(() => props.career, () => {
 /* Mobile Controls */
 .mobile-controls {
   display: none;
-  flex-direction: column;
+  flex-direction: row;
   gap: 15px;
   align-items: center;
   width: 100%;
@@ -951,7 +971,7 @@ watch(() => props.career, () => {
 }
 
 /* Mobile Responsive */
-@media (max-width: 768px) {
+@media (max-width: 740px) {
   .tetris-header {
     padding: 10px 15px;
   }
@@ -1062,7 +1082,7 @@ watch(() => props.career, () => {
   }
 
   .game-stats {
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
   }
 
@@ -1117,7 +1137,7 @@ watch(() => props.career, () => {
   }
 
   .game-stats {
-    flex-direction: column;
+    flex-direction: row;
     min-width: 160px;
     max-width: 160px;
   }
