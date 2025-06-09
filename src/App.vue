@@ -1,96 +1,16 @@
+<!-- Updated App.vue - Using ViewManager for navigation -->
 <template>
-  <div id="app" :class="currentTheme.containerClass">
-    <!-- Universe Switcher -->
-    <div class="universe-switcher">
-      <button
-          @click="switchUniverse('multiverse')"
-          :class="['universe-btn', { active: currentUniverse === 'multiverse' }]"
-      >
-        Multiverse Me
-      </button>
-      <button
-          @click="switchUniverse('current')"
-          :class="['universe-btn', { active: currentUniverse === 'current' }]"
-      >
-        Current Universe Me
-      </button>
-    </div>
-
-    <!-- Portfolio Content -->
-    <div class="portfolio-container">
-      <!-- Contact Information Component -->
-      <ContactInfo
-          :contact="currentProfile.contact"
-          :theme="currentTheme"
-      />
-
-      <!-- Experience List Component -->
-      <ExperienceList
-          :experiences="currentProfile.experiences"
-          :theme="currentTheme"
-      />
-
-      <!-- Personal Links Component -->
-      <PersonalLinks
-          :links="currentProfile.links"
-          :theme="currentTheme"
-      />
-    </div>
+  <div id="app">
+    <ViewManager />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import ContactInfo from './components/ContactInfo.vue'
-import ExperienceList from './components/ExperienceList.vue'
-import PersonalLinks from './components/PersonalLinks.vue'
-import { profileData } from './data/profiles.js'
-import { themes } from './data/themes.js'
-
-const currentUniverse = ref('current')
-const selectedCareer = ref('current')
-
-const careers = [
-  { id: 'current', name: 'Software Developer' },
-  { id: 'tattoo', name: 'Tattoo Artist' },
-  { id: 'vet', name: 'Veterinarian' },
-  { id: 'dance', name: 'Dance Teacher' },
-  { id: 'chef', name: 'Chef' },
-  { id: 'marine', name: 'Marine Biologist' },
-  { id: 'gamer', name: 'Professional Gamer' },
-  { id: 'artist', name: 'Digital Artist' },
-  { id: 'astronaut', name: 'Astronaut' },
-  { id: 'timeTraveler', name: 'Time Traveler' },
-  { id: 'dragonTamer', name: 'Dragon Tamer' },
-  { id: 'superhero', name: 'Superhero' },
-  { id: 'wizard', name: 'Wizard' },
-  { id: 'aiOverlord', name: 'AI Overlord' }
-];
-
-const currentProfile = computed(() => {
-  return profileData[selectedCareer.value]
-})
-
-const currentTheme = computed(() => {
-  return themes[selectedCareer.value] || themes.current;
-});
-
-const switchUniverse = (universe) => {
-  currentUniverse.value = universe
-  if (universe === 'current') {
-    selectedCareer.value = 'current'
-  } else {
-    const multiverseCareers = careers.filter(c => c.id !== 'current')
-    const randomIndex = Math.floor(Math.random() * multiverseCareers.length)
-    selectedCareer.value = multiverseCareers[randomIndex].id
-  }
-}
+import ViewManager from './ViewManager.vue'
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Metal+Mania&family=Fredoka+One&family=Pacifico&family=Russo+One&family=Bungee&display=swap');
-
+/* Global styles */
 * {
   margin: 0;
   padding: 0;
@@ -104,6 +24,9 @@ html, body {
   line-height: 1.6;
   transition: all 0.3s ease;
   overflow-x: hidden;
+  /* Prevent mobile scroll bounce */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 #app {
@@ -113,8 +36,56 @@ html, body {
   margin: 0;
   position: relative;
   overflow: hidden;
+  min-height: -webkit-fill-available;
+}
+@media (max-width: 768px) {
+  html {
+    height: -webkit-fill-available;
+  }
+
+  body {
+    position: relative;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    height: -webkit-fill-available;
+  }
+
+  #app {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+  }
 }
 
+/* Ensure no horizontal scrolling on any device */
+body, html, #app {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Fix for Android bottom cutoff */
+@supports (-webkit-touch-callout: none) {
+  #app {
+    /* iOS Safari */
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Additional mobile fixes */
+@media screen and (max-width: 768px) {
+  /* Prevent zoom on input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* Fix viewport height issues */
+  #app {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+}
 /* Dense starfield with varied star sizes - extended coverage */
 #app::before {
   content: '';

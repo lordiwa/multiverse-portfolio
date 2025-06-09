@@ -1,4 +1,4 @@
-<!-- src/components/PersonalLinks.vue - Complete with all styles -->
+<!-- Updated PersonalLinks.vue - Emits events for view navigation -->
 <template>
   <div :class="[theme.cardClass, theme.sectionStyle]">
     <div class="links-header">
@@ -51,40 +51,10 @@
         </component>
       </div>
     </div>
-
-    <!-- Tetris Game Component -->
-    <TetrisGame
-        :showTetris="showTetris"
-        :theme="theme"
-        :career="getCurrentCareer()"
-        @close="closeTetris"
-    />
-
-    <!-- Mad Libs Game Component -->
-    <MadLibsGame
-        :showMadLibs="showMadLibs"
-        :theme="theme"
-        :career="getCurrentCareer()"
-        @close="closeMadLibs"
-    />
-
-    <!-- Coming Soon Modal -->
-    <ComingSoonModal
-        :show="showComingSoon"
-        :linkUrl="comingSoonUrl"
-        :theme="theme"
-        :career="getCurrentCareer()"
-        @close="closeComingSoon"
-    />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import TetrisGame from './TetrisGame.vue'
-import MadLibsGame from './MadLibsGame.vue'
-import ComingSoonModal from './ComingSoonModal.vue'
-
 const props = defineProps({
   links: {
     type: Array,
@@ -96,11 +66,7 @@ const props = defineProps({
   }
 })
 
-// Game and modal states
-const showTetris = ref(false)
-const showMadLibs = ref(false)
-const showComingSoon = ref(false)
-const comingSoonUrl = ref('')
+const emit = defineEmits(['open-tetris', 'open-madlibs', 'open-coming-soon'])
 
 const getStatusClass = (status) => {
   const statusMap = {
@@ -115,41 +81,17 @@ const getStatusClass = (status) => {
   return statusMap[status] || 'status-default'
 }
 
-const getCurrentCareer = () => {
-  const containerClass = props.theme.containerClass
-  if (containerClass.includes('tech')) return 'current'
-  if (containerClass.includes('tattoo')) return 'tattoo'
-  if (containerClass.includes('vet')) return 'vet'
-  if (containerClass.includes('dance')) return 'dance'
-  if (containerClass.includes('chef')) return 'chef'
-  if (containerClass.includes('marine')) return 'marine'
-  if (containerClass.includes('gamer')) return 'gamer'
-  if (containerClass.includes('artist')) return 'artist'
-  if (containerClass.includes('astronaut')) return 'astronaut'
-  if (containerClass.includes('time')) return 'timeTraveler'
-  if (containerClass.includes('dragon')) return 'dragonTamer'
-  if (containerClass.includes('hero')) return 'superhero'
-  if (containerClass.includes('wizard')) return 'wizard'
-  if (containerClass.includes('ai')) return 'aiOverlord'
-  return 'current'
-}
-
 const handleInteractiveLink = (url) => {
-  // Close any open modals/games first
-  showTetris.value = false
-  showMadLibs.value = false
-  showComingSoon.value = false
-
   // Handle different interactive links
   switch (url) {
     case '#tetris':
     case '#neural-tetris':
     case '#infinite-tetris':
-      openTetris()
+      emit('open-tetris')
       break
     case '#madlibs':
     case '#mad-libs':
-      openMadLibs()
+      emit('open-madlibs')
       break
     case '#generative-art':
     case '#ai-integration':
@@ -162,44 +104,18 @@ const handleInteractiveLink = (url) => {
     case '#defense':
     case '#hardware':
       // Show coming soon modal for these features
-      openComingSoon(url)
+      emit('open-coming-soon', url)
       break
     default:
       console.log('Unknown interactive link:', url)
       // Show generic coming soon
-      openComingSoon(url)
+      emit('open-coming-soon', url)
   }
-}
-
-const openTetris = () => {
-  showTetris.value = true
-}
-
-const closeTetris = () => {
-  showTetris.value = false
-}
-
-const openMadLibs = () => {
-  showMadLibs.value = true
-}
-
-const closeMadLibs = () => {
-  showMadLibs.value = false
-}
-
-const openComingSoon = (url) => {
-  comingSoonUrl.value = url
-  showComingSoon.value = true
-}
-
-const closeComingSoon = () => {
-  showComingSoon.value = false
-  comingSoonUrl.value = ''
 }
 </script>
 
 <style scoped>
-/* COMPLETE STYLING - Copy from your original PersonalLinks.vue and add interactive styles */
+/* Keep all existing PersonalLinks styles */
 
 .links-card {
   padding: 35px;
@@ -590,29 +506,6 @@ const closeComingSoon = () => {
 @keyframes interactiveArrowPulse {
   0%, 100% { transform: translateX(0px) scale(1); }
   50% { transform: translateX(8px) scale(1.2); }
-}
-
-/* Special styling for Tetris links */
-.interactive-link .link-content h3:contains("Tetris"),
-.interactive-link .link-content h3:contains("Neural"),
-.interactive-link .link-content h3:contains("Block") {
-  color: #9d4edd !important;
-}
-
-.interactive-link:has(.link-content h3:contains("Tetris")),
-.interactive-link:has(.link-content h3:contains("Neural")),
-.interactive-link:has(.link-content h3:contains("Block")) {
-  border-left: 4px solid #9d4edd !important;
-  background: linear-gradient(135deg,
-  rgba(157, 78, 221, 0.1) 0%,
-  rgba(157, 78, 221, 0.05) 100%) !important;
-}
-
-.interactive-link:hover:has(.link-content h3:contains("Tetris")),
-.interactive-link:hover:has(.link-content h3:contains("Neural")),
-.interactive-link:hover:has(.link-content h3:contains("Block")) {
-  box-shadow: 0 0 30px rgba(157, 78, 221, 0.4) !important;
-  border-left-color: #9d4edd !important;
 }
 
 /* Mobile responsive */

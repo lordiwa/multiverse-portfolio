@@ -1,124 +1,149 @@
+<!-- TetrisView.vue - Complete Full Screen Tetris Game -->
 <template>
-  <div v-if="showTetris" class="tetris-overlay" @click="closeTetris">
-    <div :class="['tetris-modal', theme.containerClass]" @click.stop>
-      <div class="tetris-header">
-        <h2>{{ getTetrisTitle() }}</h2>
-        <button @click="closeTetris" class="close-btn" :disabled="gameRunning">✕</button>
-      </div>
+  <div :class="['tetris-view', theme.containerClass]">
+    <!-- Header with back button -->
+    <div class="tetris-header">
+      <button @click="goBack" class="back-btn" :disabled="gameRunning && !paused">
+        <span class="back-arrow">←</span>
+        <span class="back-text">Back</span>
+      </button>
+      <h1>{{ getTetrisTitle() }}</h1>
+      <div class="header-spacer"></div>
+    </div>
 
-      <div class="tetris-content">
-        <!-- Game Area -->
-        <div class="game-container">
-          <!-- Game Board -->
-          <div class="game-board-container">
-            <canvas
-                ref="gameCanvas"
-                :width="boardWidth * cellSize"
-                :height="boardHeight * cellSize"
-                :class="['game-canvas', theme.sectionStyle]"
-                @touchstart="handleTouchStart"
-                @touchmove="handleTouchMove"
-                @touchend="handleTouchEnd"
-            ></canvas>
+    <!-- Game Content -->
+    <div class="tetris-content">
+      <!-- Game Area -->
+      <div class="game-container">
+        <!-- Game Board -->
+        <div class="game-board-container">
+          <canvas
+              ref="gameCanvas"
+              :width="boardWidth * cellSize"
+              :height="boardHeight * cellSize"
+              :class="['game-canvas', theme.sectionStyle]"
+              @touchstart="handleTouchStart"
+              @touchmove="handleTouchMove"
+              @touchend="handleTouchEnd"
+          ></canvas>
 
-            <!-- Game Over Overlay -->
-            <div v-if="!gameRunning" class="game-overlay">
-              <div class="overlay-content">
-                <h3>{{ score > 0 ? 'Game Over!' : 'Ready to Play?' }}</h3>
-                <p v-if="score > 0" class="final-score">
-                  Final Score: {{ score.toLocaleString() }}<br>
-                  Level Reached: {{ level }}
-                </p>
-                <button @click="startGame" :class="['btn-start', theme.sectionStyle]">
-                  {{ score > 0 ? 'Play Again' : 'Start Game' }}
-                </button>
-              </div>
+          <!-- Game Over Overlay -->
+          <div v-if="!gameRunning" class="game-overlay">
+            <div class="overlay-content">
+              <h3>{{ score > 0 ? 'Game Over!' : 'Ready to Play?' }}</h3>
+              <p v-if="score > 0" class="final-score">
+                Final Score: {{ score.toLocaleString() }}<br>
+                Level Reached: {{ level }}<br>
+                Lines Cleared: {{ linesCleared }}
+              </p>
+              <p v-else class="game-instructions">
+                Use arrow keys to move and rotate pieces.<br>
+                SPACE for hard drop. Clear lines to score!
+              </p>
+              <button @click="startGame" :class="['btn-start', theme.sectionStyle]">
+                {{ score > 0 ? 'Play Again' : 'Start Game' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Stats Side Panel -->
+        <div class="game-stats">
+          <div :class="['stat-card', theme.sectionStyle]">
+            <h4>Statistics</h4>
+            <div class="stat-item">
+              <span class="stat-label">Score:</span>
+              <span class="stat-value">{{ score.toLocaleString() }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Level:</span>
+              <span class="stat-value">{{ level }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Lines:</span>
+              <span class="stat-value">{{ linesCleared }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Speed:</span>
+              <span class="stat-value">{{ Math.round(1000/dropTime) }}x</span>
             </div>
           </div>
 
-          <!-- Game Stats -->
-          <div class="game-stats">
-            <div :class="['stat-card', theme.sectionStyle]">
-              <h4>Stats</h4>
-              <div class="stat-item">
-                <span class="stat-label">Score:</span>
-                <span class="stat-value">{{ score.toLocaleString() }}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">Level:</span>
-                <span class="stat-value">{{ level }}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">Lines:</span>
-                <span class="stat-value">{{ linesCleared }}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">Speed:</span>
-                <span class="stat-value">{{ Math.round(1000/dropTime) }}x</span>
-              </div>
-            </div>
+          <!-- Next Piece Preview -->
+          <div :class="['next-piece-card', theme.sectionStyle]" v-if="nextPiece">
+            <h4>Next Piece</h4>
+            <canvas
+                ref="nextCanvas"
+                width="120"
+                height="80"
+                class="next-canvas"
+            ></canvas>
+          </div>
 
-            <!-- Next Piece Preview -->
-            <div :class="['next-piece-card', theme.sectionStyle]" v-if="nextPiece">
-              <h4>Next</h4>
-              <canvas
-                  ref="nextCanvas"
-                  width="120"
-                  height="80"
-                  class="next-canvas"
-              ></canvas>
-            </div>
-
-            <!-- Pause Button -->
+          <!-- Game Controls -->
+          <div class="control-buttons">
             <button
                 v-if="gameRunning"
                 @click="pauseGame"
                 :class="['btn-pause', theme.sectionStyle]"
             >
-              {{ paused ? 'Resume' : 'Pause' }}
+              {{ paused ? '▶ Resume' : '⏸ Pause' }}
+            </button>
+            <button
+                v-if="gameRunning && !paused"
+                @click="hardDrop"
+                :class="['btn-drop', theme.sectionStyle]"
+            >
+              ⬇ Drop
             </button>
           </div>
         </div>
+      </div>
 
-        <!-- Mobile Controls -->
-        <div class="mobile-controls">
-          <div class="control-row">
-            <button @click="rotatePieceHandler" :class="['control-btn', theme.sectionStyle]">
-              ↻
-            </button>
-            <button @click="hardDrop" :class="['control-btn', theme.sectionStyle]">
-              ⬇
-            </button>
-          </div>
-          <div class="control-row">
-            <button @click="() => movePiece(-1, 0)" :class="['control-btn', theme.sectionStyle]">
-              ←
-            </button>
-            <button @click="() => movePiece(0, 1)" :class="['control-btn', theme.sectionStyle]">
-              ↓
-            </button>
-            <button @click="() => movePiece(1, 0)" :class="['control-btn', theme.sectionStyle]">
-              →
-            </button>
-          </div>
+      <!-- Mobile Controls -->
+      <div class="mobile-controls">
+        <div class="control-instructions">
+          <span>Swipe: Move • Swipe Up: Rotate • Swipe Down: Drop</span>
         </div>
+        <div class="control-row">
+          <button @click="rotatePieceHandler" :class="['control-btn', theme.sectionStyle]" :disabled="!gameRunning || paused">
+            ↻<span class="btn-label">Rotate</span>
+          </button>
+          <button @click="hardDrop" :class="['control-btn', theme.sectionStyle]" :disabled="!gameRunning || paused">
+            ⬇<span class="btn-label">Drop</span>
+          </button>
+        </div>
+        <div class="control-row">
+          <button @click="() => movePiece(-1, 0)" :class="['control-btn', theme.sectionStyle]" :disabled="!gameRunning || paused">
+            ←<span class="btn-label">Left</span>
+          </button>
+          <button @click="() => movePiece(0, 1)" :class="['control-btn', theme.sectionStyle]" :disabled="!gameRunning || paused">
+            ↓<span class="btn-label">Soft</span>
+          </button>
+          <button @click="() => movePiece(1, 0)" :class="['control-btn', theme.sectionStyle]" :disabled="!gameRunning || paused">
+            →<span class="btn-label">Right</span>
+          </button>
+        </div>
+      </div>
 
-        <!-- Desktop Instructions -->
-        <div class="desktop-controls">
-          <div :class="['controls-card', theme.sectionStyle]">
-            <h4>Controls</h4>
-            <div class="control-instruction">
-              <span>← → Move</span>
-            </div>
-            <div class="control-instruction">
-              <span>↓ Soft Drop</span>
-            </div>
-            <div class="control-instruction">
-              <span>↑ Rotate</span>
-            </div>
-            <div class="control-instruction">
-              <span>SPACE Hard Drop</span>
-            </div>
+      <!-- Desktop Instructions -->
+      <div class="desktop-controls">
+        <div :class="['controls-card', theme.sectionStyle]">
+          <h4>Keyboard Controls</h4>
+          <div class="control-instruction">
+            <span class="key">← →</span> Move Left/Right
+          </div>
+          <div class="control-instruction">
+            <span class="key">↓</span> Soft Drop
+          </div>
+          <div class="control-instruction">
+            <span class="key">↑</span> Rotate Piece
+          </div>
+          <div class="control-instruction">
+            <span class="key">SPACE</span> Hard Drop
+          </div>
+          <div class="control-instruction">
+            <span class="key">P</span> Pause Game
           </div>
         </div>
       </div>
@@ -130,10 +155,6 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 
 const props = defineProps({
-  showTetris: {
-    type: Boolean,
-    default: false
-  },
   theme: {
     type: Object,
     required: true
@@ -144,7 +165,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['back'])
 
 // Game constants
 const BOARD_WIDTH = 10
@@ -160,7 +181,7 @@ const PIECES = {
 }
 
 // Responsive cell size
-const cellSize = ref(25)
+const cellSize = ref(22)
 const boardWidth = computed(() => BOARD_WIDTH)
 const boardHeight = computed(() => BOARD_HEIGHT)
 
@@ -186,16 +207,18 @@ const touchThreshold = 30
 // Responsive sizing
 const updateCellSize = () => {
   const isMobile = window.innerWidth < 768
-  cellSize.value = isMobile ? 20 : 25
+  cellSize.value = isMobile ? 18 : 22
 }
 
 onMounted(() => {
   updateCellSize()
   window.addEventListener('resize', updateCellSize)
+  window.addEventListener('keydown', handleKeyPress)
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateCellSize)
+  window.removeEventListener('keydown', handleKeyPress)
   if (gameLoopId.value) {
     cancelAnimationFrame(gameLoopId.value)
   }
@@ -269,7 +292,6 @@ const clearLines = (boardState) => {
   const newBoard = boardState.filter(row => row.some(cell => !cell))
   const clearedCount = BOARD_HEIGHT - newBoard.length
 
-  // Add empty rows at top
   while (newBoard.length < BOARD_HEIGHT) {
     newBoard.unshift(Array(BOARD_WIDTH).fill(0))
   }
@@ -311,7 +333,12 @@ const movePiece = (dx, dy) => {
     currentPiece.value = nextPiece.value
     nextPiece.value = createRandomPiece()
     linesCleared.value += clearedCount
-    score.value += clearedCount * 100 * level.value
+
+    // Scoring system
+    if (clearedCount > 0) {
+      const linePoints = [0, 40, 100, 300, 1200] // Standard Tetris scoring
+      score.value += linePoints[clearedCount] * level.value
+    }
 
     // Check game over
     if (checkCollision(currentPiece.value, board.value)) {
@@ -339,7 +366,10 @@ const hardDrop = () => {
   while (!checkCollision(currentPiece.value, board.value, 0, dropY + 1)) {
     dropY++
   }
-  movePiece(0, dropY)
+  if (dropY > 0) {
+    score.value += dropY * 2 // Bonus points for hard drop
+    movePiece(0, dropY)
+  }
 }
 
 // Touch handlers
@@ -537,159 +567,131 @@ const startGame = () => {
 
 const pauseGame = () => {
   paused.value = !paused.value
-  if (!paused.value) {
+  if (!paused.value && gameRunning.value) {
     gameLoopId.value = requestAnimationFrame(gameLoop)
   }
 }
 
-const closeTetris = () => {
+const goBack = () => {
+  if (gameRunning.value && !paused.value) {
+    pauseGame()
+    return
+  }
+
   gameRunning.value = false
   paused.value = false
   if (gameLoopId.value) {
     cancelAnimationFrame(gameLoopId.value)
   }
-  emit('close')
+  emit('back')
 }
 
 // Watch for updates to redraw
 watch([board, currentPiece, cellSize], drawBoard, { deep: true })
 watch(nextPiece, drawNextPiece, { deep: true })
 
-// Event listeners
-watch(() => props.showTetris, (show) => {
-  if (show) {
-    nextTick(() => {
-      updateCellSize()
-      drawBoard()
-      drawNextPiece()
-    })
-    window.addEventListener('keydown', handleKeyPress)
-  } else {
-    window.removeEventListener('keydown', handleKeyPress)
-    if (gameLoopId.value) {
-      cancelAnimationFrame(gameLoopId.value)
-    }
-  }
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyPress)
-})
+// Initialize when mounted
+watch(() => props.career, () => {
+  nextTick(() => {
+    updateCellSize()
+    drawBoard()
+    drawNextPiece()
+  })
+}, { immediate: true })
 </script>
 
 <style scoped>
-.tetris-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  padding: 10px;
-  backdrop-filter: blur(15px);
-  box-sizing: border-box;
-}
-
-.tetris-modal {
+.tetris-view {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
   width: 100%;
-  max-width: 900px;
-  max-height: 95vh;
-  overflow-y: auto;
-  border-radius: 16px;
   position: relative;
-  font-family: 'Orbitron', monospace;
-
-  background: linear-gradient(135deg,
-  rgba(0, 20, 40, 0.98) 0%,
-  rgba(0, 40, 80, 0.98) 50%,
-  rgba(0, 20, 40, 0.98) 100%);
-  border: 4px solid currentColor;
-  box-shadow:
-      0 0 40px currentColor,
-      inset 0 0 40px rgba(255, 255, 255, 0.1),
-      0 0 120px rgba(0, 255, 255, 0.4);
-
-  background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.08) 3px, rgba(255,255,255,0.08) 6px),
-      repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px);
-
-  animation: modalPulse 4s ease-in-out infinite alternate;
-}
-
-@keyframes modalPulse {
-  0% {
-    box-shadow:
-        0 0 40px currentColor,
-        inset 0 0 40px rgba(255, 255, 255, 0.1),
-        0 0 120px rgba(0, 255, 255, 0.4);
-  }
-  100% {
-    box-shadow:
-        0 0 60px currentColor,
-        inset 0 0 60px rgba(255, 255, 255, 0.2),
-        0 0 180px rgba(0, 255, 255, 0.6);
-  }
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tetris-header {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg,
+  rgba(0, 20, 40, 0.95) 0%,
+  rgba(0, 40, 80, 0.95) 50%,
+  rgba(0, 20, 40, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+  padding: 15px 20px;
+  z-index: 10;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px 25px;
-  border-bottom: 3px solid rgba(255, 255, 255, 0.3);
-  background: linear-gradient(90deg,
-  rgba(255, 255, 255, 0.1) 0%,
-  rgba(255, 255, 255, 0.05) 50%,
-  rgba(255, 255, 255, 0.1) 100%);
+  gap: 20px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-.tetris-header h2 {
-  font-size: 1.8em;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  margin: 0;
-  color: currentColor;
-  text-shadow: 0 0 25px currentColor;
-  font-family: 'Orbitron', monospace;
-  line-height: 1.2;
-}
-
-.close-btn {
-  background: transparent;
-  border: 3px solid currentColor;
-  color: currentColor;
-  width: 45px;
-  height: 45px;
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border: 2px solid currentColor;
   border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.8em;
-  font-weight: bold;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  color: currentColor;
   font-family: 'Orbitron', monospace;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.close-btn:hover:not(:disabled) {
-  background: currentColor;
-  color: black;
-  transform: scale(1.1);
-  box-shadow: 0 0 25px currentColor;
+.back-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.close-btn:disabled {
+.back-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
+.back-arrow {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.back-text {
+  font-size: 0.85em;
+}
+
+.tetris-header h1 {
+  font-size: 1.8em;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: currentColor;
+  text-shadow: 0 0 20px currentColor;
+  font-family: 'Orbitron', monospace;
+  flex: 1;
+  text-align: center;
+}
+
+.header-spacer {
+  width: 80px;
+}
+
 .tetris-content {
+  flex: 1;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .game-container {
@@ -697,7 +699,7 @@ onUnmounted(() => {
   gap: 20px;
   justify-content: center;
   align-items: flex-start;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .game-board-container {
@@ -725,11 +727,13 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
+  backdrop-filter: blur(5px);
 }
 
 .overlay-content {
   text-align: center;
   color: white;
+  padding: 20px;
 }
 
 .overlay-content h3 {
@@ -737,12 +741,15 @@ onUnmounted(() => {
   margin-bottom: 15px;
   color: currentColor;
   text-shadow: 0 0 15px currentColor;
+  font-family: 'Orbitron', monospace;
 }
 
-.final-score {
+.final-score,
+.game-instructions {
   margin-bottom: 20px;
   opacity: 0.9;
   line-height: 1.5;
+  font-size: 0.95em;
 }
 
 .btn-start {
@@ -787,12 +794,13 @@ onUnmounted(() => {
 .stat-card h4,
 .next-piece-card h4,
 .controls-card h4 {
-  font-size: 1.2em;
+  font-size: 1.1em;
   margin-bottom: 10px;
   color: currentColor;
   text-shadow: 0 0 15px currentColor;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-family: 'Orbitron', monospace;
 }
 
 .stat-item {
@@ -819,12 +827,19 @@ onUnmounted(() => {
   height: 60px;
 }
 
-.btn-pause {
+.control-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-pause,
+.btn-drop {
   padding: 12px 20px;
   border: 2px solid currentColor;
   border-radius: 8px;
-  background: linear-gradient(45deg, rgba(255, 165, 0, 0.8), rgba(255, 140, 0, 0.6));
-  color: white;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  color: currentColor;
   font-family: 'Orbitron', monospace;
   font-weight: 700;
   text-transform: uppercase;
@@ -834,34 +849,66 @@ onUnmounted(() => {
   font-size: 0.9em;
 }
 
-.btn-pause:hover {
+.btn-pause:hover,
+.btn-drop:hover {
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .control-instruction {
   font-size: 0.85em;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.key {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Orbitron', monospace;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: center;
 }
 
 /* Mobile Controls */
 .mobile-controls {
   display: none;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
-  margin-top: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.control-instructions {
+  text-align: center;
+  font-size: 0.8em;
+  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .control-row {
   display: flex;
-  gap: 15px;
+  gap: 12px;
+  justify-content: center;
 }
 
 .control-btn {
-  width: 60px;
-  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 70px;
+  height: 70px;
   border: 3px solid currentColor;
   border-radius: 10px;
   background: linear-gradient(45deg,
@@ -870,20 +917,33 @@ onUnmounted(() => {
   color: currentColor;
   font-family: 'Orbitron', monospace;
   font-weight: 700;
-  font-size: 1.2em;
+  font-size: 1.5em;
   cursor: pointer;
   transition: all 0.3s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  justify-content: center;
 }
 
-.control-btn:hover,
-.control-btn:active {
+.control-btn:hover:not(:disabled),
+.control-btn:active:not(:disabled) {
   background: linear-gradient(45deg,
   rgba(255, 255, 255, 0.2) 0%,
   rgba(255, 255, 255, 0.1) 100%);
   transform: scale(0.95);
   box-shadow: 0 0 20px currentColor;
+}
+
+.control-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-label {
+  font-size: 0.4em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .desktop-controls {
@@ -892,39 +952,33 @@ onUnmounted(() => {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .tetris-overlay {
-    padding: 5px;
-  }
-
-  .tetris-modal {
-    max-width: 95vw;
-    max-height: 98vh;
-    border-width: 2px;
-  }
-
   .tetris-header {
-    padding: 15px 20px;
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
+    padding: 10px 15px;
   }
 
-  .tetris-header h2 {
+  .tetris-header h1 {
     font-size: 1.3em;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    text-align: left;
   }
 
-  .close-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1.4em;
-    position: absolute;
-    top: 15px;
-    right: 20px;
+  .back-btn {
+    padding: 8px 12px;
+    font-size: 0.8em;
+    gap: 6px;
+  }
+
+  .back-text {
+    display: none;
+  }
+
+  .header-spacer {
+    display: none;
   }
 
   .tetris-content {
     padding: 15px;
+    gap: 15px;
   }
 
   .game-container {
@@ -936,7 +990,7 @@ onUnmounted(() => {
   .game-stats {
     min-width: unset;
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
@@ -951,12 +1005,12 @@ onUnmounted(() => {
 
   .stat-card h4,
   .next-piece-card h4 {
-    font-size: 1em;
+    font-size: 0.9em;
     margin-bottom: 8px;
   }
 
   .stat-item {
-    font-size: 0.8em;
+    font-size: 0.75em;
     margin-bottom: 4px;
   }
 
@@ -964,9 +1018,16 @@ onUnmounted(() => {
     height: 50px;
   }
 
-  .btn-pause {
+  .control-buttons {
     width: 100%;
-    margin-top: 10px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .btn-pause,
+  .btn-drop {
+    flex: 1;
     padding: 10px;
     font-size: 0.8em;
   }
@@ -980,25 +1041,20 @@ onUnmounted(() => {
   }
 
   .control-btn {
-    width: 55px;
-    height: 55px;
-    font-size: 1.1em;
+    width: 65px;
+    height: 65px;
+    font-size: 1.3em;
     border-width: 2px;
+  }
+
+  .btn-label {
+    font-size: 0.35em;
   }
 }
 
 @media (max-width: 480px) {
-  .tetris-header h2 {
+  .tetris-header h1 {
     font-size: 1.1em;
-    letter-spacing: 1px;
-  }
-
-  .close-btn {
-    width: 35px;
-    height: 35px;
-    font-size: 1.2em;
-    top: 10px;
-    right: 15px;
   }
 
   .tetris-content {
@@ -1016,9 +1072,9 @@ onUnmounted(() => {
   }
 
   .control-btn {
-    width: 50px;
-    height: 50px;
-    font-size: 1em;
+    width: 60px;
+    height: 60px;
+    font-size: 1.2em;
   }
 
   .control-row {
@@ -1038,20 +1094,21 @@ onUnmounted(() => {
 
 /* Landscape mobile */
 @media (max-height: 600px) and (orientation: landscape) {
-  .tetris-modal {
-    max-height: 95vh;
+  .tetris-view {
+    min-height: 100vh;
   }
 
   .tetris-header {
-    padding: 10px 20px;
+    padding: 8px 15px;
   }
 
-  .tetris-header h2 {
+  .tetris-header h1 {
     font-size: 1.1em;
   }
 
   .tetris-content {
     padding: 10px;
+    gap: 10px;
   }
 
   .game-container {
@@ -1061,18 +1118,23 @@ onUnmounted(() => {
 
   .game-stats {
     flex-direction: column;
-    min-width: 150px;
-    max-width: 150px;
+    min-width: 160px;
+    max-width: 160px;
   }
 
   .mobile-controls {
     margin-top: 10px;
+    gap: 10px;
   }
 
   .control-btn {
-    width: 45px;
-    height: 45px;
-    font-size: 0.9em;
+    width: 50px;
+    height: 50px;
+    font-size: 1em;
+  }
+
+  .btn-label {
+    font-size: 0.3em;
   }
 }
 
@@ -1086,154 +1148,140 @@ onUnmounted(() => {
 }
 
 /* Theme-specific styling */
-.tech-container .tetris-modal {
+.tech-container .tetris-view {
   color: #00f5ff;
-  border-color: #00f5ff;
 }
 
-.tattoo-container .tetris-modal {
+.tattoo-container .tetris-view {
   color: #ff6b6b;
-  border-color: #ff6b6b;
   font-family: 'Metal Mania', cursive;
 }
 
-.tattoo-container .tetris-header h2,
+.tattoo-container .tetris-header h1,
 .tattoo-container .stat-card h4,
 .tattoo-container .next-piece-card h4,
 .tattoo-container .controls-card h4 {
   font-family: 'Metal Mania', cursive;
 }
 
-.vet-container .tetris-modal {
+.vet-container .tetris-view {
   color: #90ee90;
-  border-color: #90ee90;
   font-family: 'Fredoka One', cursive;
 }
 
-.vet-container .tetris-header h2,
+.vet-container .tetris-header h1,
 .vet-container .stat-card h4,
 .vet-container .next-piece-card h4,
 .vet-container .controls-card h4 {
   font-family: 'Fredoka One', cursive;
 }
 
-.dance-container .tetris-modal {
+.dance-container .tetris-view {
   color: #ff69b4;
-  border-color: #ff69b4;
   font-family: 'Pacifico', cursive;
 }
 
-.dance-container .tetris-header h2,
+.dance-container .tetris-header h1,
 .dance-container .stat-card h4,
 .dance-container .next-piece-card h4,
 .dance-container .controls-card h4 {
   font-family: 'Pacifico', cursive;
 }
 
-.chef-container .tetris-modal {
+.chef-container .tetris-view {
   color: #ffa500;
-  border-color: #ffa500;
   font-family: 'Fredoka One', cursive;
 }
 
-.chef-container .tetris-header h2,
+.chef-container .tetris-header h1,
 .chef-container .stat-card h4,
 .chef-container .next-piece-card h4,
 .chef-container .controls-card h4 {
   font-family: 'Fredoka One', cursive;
 }
 
-.marine-container .tetris-modal {
+.marine-container .tetris-view {
   color: #00bfff;
-  border-color: #00bfff;
 }
 
-.gamer-container .tetris-modal {
+.gamer-container .tetris-view {
   color: #9d4edd;
-  border-color: #9d4edd;
   font-family: 'Russo One', monospace;
 }
 
-.gamer-container .tetris-header h2,
+.gamer-container .tetris-header h1,
 .gamer-container .stat-card h4,
 .gamer-container .next-piece-card h4,
 .gamer-container .controls-card h4 {
   font-family: 'Russo One', monospace;
 }
 
-.artist-container .tetris-modal {
+.artist-container .tetris-view {
   color: #dda0dd;
-  border-color: #dda0dd;
   font-family: 'Pacifico', cursive;
 }
 
-.artist-container .tetris-header h2,
+.artist-container .tetris-header h1,
 .artist-container .stat-card h4,
 .artist-container .next-piece-card h4,
 .artist-container .controls-card h4 {
   font-family: 'Pacifico', cursive;
 }
 
-.astronaut-container .tetris-modal {
+.astronaut-container .tetris-view {
   color: #c0c0c0;
-  border-color: #c0c0c0;
 }
 
-.time-container .tetris-modal {
+.time-container .tetris-view {
   color: #ffd700;
-  border-color: #ffd700;
   font-family: 'Bungee', cursive;
 }
 
-.time-container .tetris-header h2,
+.time-container .tetris-header h1,
 .time-container .stat-card h4,
 .time-container .next-piece-card h4,
 .time-container .controls-card h4 {
   font-family: 'Bungee', cursive;
 }
 
-.dragon-container .tetris-modal {
+.dragon-container .tetris-view {
   color: #ff4500;
-  border-color: #ff4500;
   font-family: 'Metal Mania', cursive;
 }
 
-.dragon-container .tetris-header h2,
+.dragon-container .tetris-header h1,
 .dragon-container .stat-card h4,
 .dragon-container .next-piece-card h4,
 .dragon-container .controls-card h4 {
   font-family: 'Metal Mania', cursive;
 }
 
-.hero-container .tetris-modal {
+.hero-container .tetris-view {
   color: #1e90ff;
-  border-color: #1e90ff;
   font-family: 'Russo One', sans-serif;
 }
 
-.hero-container .tetris-header h2,
+.hero-container .tetris-header h1,
 .hero-container .stat-card h4,
 .hero-container .next-piece-card h4,
 .hero-container .controls-card h4 {
   font-family: 'Russo One', sans-serif;
 }
 
-.wizard-container .tetris-modal {
+.wizard-container .tetris-view {
   color: #9300d3;
-  border-color: #9300d3;
   font-family: 'Creepster', cursive;
 }
 
-.wizard-container .tetris-header h2,
+.wizard-container .tetris-header h1,
 .wizard-container .stat-card h4,
 .wizard-container .next-piece-card h4,
 .wizard-container .controls-card h4 {
   font-family: 'Creepster', cursive;
 }
 
-.ai-container .tetris-modal {
+.ai-container .tetris-view {
   color: #00ff00;
-  border-color: #00ff00;
 }
 
 /* Special effects for different themes */
@@ -1246,7 +1294,7 @@ onUnmounted(() => {
   100% { box-shadow: 0 0 50px #9d4edd, 0 0 80px #9d4edd; }
 }
 
-.wizard-container .control-btn:hover {
+.wizard-container .control-btn:hover:not(:disabled) {
   animation: magicalSparkle 0.5s ease-in-out;
 }
 
