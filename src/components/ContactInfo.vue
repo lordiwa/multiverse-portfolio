@@ -1,12 +1,12 @@
 <template>
   <div :class="[theme.cardClass, theme.sectionStyle]">
-<!--    &lt;!&ndash; Email Contact Button &ndash;&gt;-->
-<!--    <div class="email-button-container">-->
-<!--      <button @click="openEmailModal" :class="['email-contact-btn', theme.sectionStyle]">-->
-<!--        <span class="email-icon">📡</span>-->
-<!--        <span class="email-text">Send Neural Message</span>-->
-<!--      </button>-->
-<!--    </div>-->
+    <!-- Email Contact Button -->
+    <div class="email-button-container">
+      <button @click="openEmailModal" :class="['email-contact-btn', theme.sectionStyle]">
+        <span class="email-icon">📡</span>
+        <span class="email-text">Send Neural Message</span>
+      </button>
+    </div>
 
     <div class="contact-header">
       <div class="avatar-games">
