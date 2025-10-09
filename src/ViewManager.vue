@@ -1,4 +1,3 @@
-<!-- ViewManager.vue - Fixed Mobile Scrolling Issues -->
 <template>
   <div class="view-manager" :class="currentTheme?.containerClass">
     <!-- Main Portfolio View -->
@@ -19,32 +18,16 @@
         </button>
       </div>
 
-      <!-- Portfolio Content -->
-      <div class="portfolio-container">
-        <!-- Contact Information Component -->
-        <ContactInfo
-            :contact="currentProfile.contact"
-            :theme="currentTheme"
-            @open-email="openView('email')"
-            @open-madlibs="openView('madlibs')"
-            @open-tetris="openView('tetris')"
-        />
-
-        <!-- Experience List Component -->
-        <ExperienceList
-            :experiences="currentProfile.experiences"
-            :theme="currentTheme"
-        />
-
-        <!-- Personal Links Component -->
-        <PersonalLinks
-            :links="currentProfile.links"
-            :theme="currentTheme"
-            @open-tetris="openView('tetris')"
-            @open-madlibs="openView('madlibs')"
-            @open-coming-soon="openComingSoon"
-        />
-      </div>
+      <!-- Layout Manager - handles different compositions -->
+      <LayoutManager
+          :profile="currentProfile"
+          :theme="currentTheme"
+          :career="selectedCareer"
+          @open-email="openView('email')"
+          @open-madlibs="openView('madlibs')"
+          @open-tetris="openView('tetris')"
+          @open-coming-soon="openComingSoon"
+      />
     </div>
 
     <!-- Email Contact View -->
@@ -71,7 +54,7 @@
         @back="backToPortfolio"
     />
 
-    <!-- Coming Soon Modal (keep as modal since it's lightweight) -->
+    <!-- Coming Soon Modal -->
     <ComingSoonModal
         :show="showComingSoon"
         :linkUrl="comingSoonUrl"
@@ -84,39 +67,41 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import ContactInfo from './components/ContactInfo.vue'
-import ExperienceList from './components/ExperienceList.vue'
-import PersonalLinks from './components/PersonalLinks.vue'
+import LayoutManager from './layouts/LayoutManager.vue'
 import EmailContactView from './components/EmailContactView.vue'
 import MadLibsView from './components/MadLibsView.vue'
 import TetrisView from './components/TetrisView.vue'
 import ComingSoonModal from './components/ComingSoonModal.vue'
 import { profileData } from './data/profiles.js'
-import { themes } from './data/themes.js'
+import { themes, getThemeGroup, getCareersNotInGroups } from './data/themes.js'
 
 // View management
 const currentView = ref('portfolio')
 const currentUniverse = ref('current')
 const selectedCareer = ref('current')
 
+// Track last 2 theme groups to prevent repetition
+const lastThemeGroups = ref([])
+
 // Coming soon modal
 const showComingSoon = ref(false)
 const comingSoonUrl = ref('')
 
+// All 14 career options
 const careers = [
   { id: 'current', name: 'Software Developer' },
   { id: 'tattoo', name: 'Tattoo Artist' },
+  { id: 'artist', name: 'Digital Artist' },
   { id: 'vet', name: 'Veterinarian' },
+  { id: 'marine', name: 'Marine Biologist' },
+  { id: 'astronaut', name: 'Astronaut' },
   { id: 'dance', name: 'Dance Teacher' },
   { id: 'chef', name: 'Chef' },
-  { id: 'marine', name: 'Marine Biologist' },
   { id: 'gamer', name: 'Professional Gamer' },
-  { id: 'artist', name: 'Digital Artist' },
-  { id: 'astronaut', name: 'Astronaut' },
-  { id: 'timeTraveler', name: 'Time Traveler' },
-  { id: 'dragonTamer', name: 'Dragon Tamer' },
-  { id: 'superhero', name: 'Superhero' },
   { id: 'wizard', name: 'Wizard' },
+  { id: 'dragonTamer', name: 'Dragon Tamer' },
+  { id: 'timeTraveler', name: 'Time Traveler' },
+  { id: 'superhero', name: 'Superhero' },
   { id: 'aiOverlord', name: 'AI Overlord' }
 ]
 
@@ -130,18 +115,39 @@ const currentTheme = computed(() => {
 
 const switchUniverse = (universe) => {
   currentUniverse.value = universe
+
   if (universe === 'current') {
     selectedCareer.value = 'current'
+    lastThemeGroups.value = []
   } else {
-    const multiverseCareers = careers.filter(c => c.id !== 'current')
-    const randomIndex = Math.floor(Math.random() * multiverseCareers.length)
-    selectedCareer.value = multiverseCareers[randomIndex].id
+    const allCareerIds = careers
+        .filter(c => c.id !== 'current')
+        .map(c => c.id)
+
+    let availableCareers = getCareersNotInGroups(
+        lastThemeGroups.value,
+        allCareerIds
+    )
+
+    if (availableCareers.length === 0) {
+      const currentGroup = getThemeGroup(selectedCareer.value)
+      availableCareers = getCareersNotInGroups([currentGroup], allCareerIds)
+    }
+
+    if (availableCareers.length === 0) {
+      availableCareers = allCareerIds
+    }
+
+    const randomIndex = Math.floor(Math.random() * availableCareers.length)
+    selectedCareer.value = availableCareers[randomIndex]
+
+    const newGroup = getThemeGroup(selectedCareer.value)
+    lastThemeGroups.value = [newGroup, ...lastThemeGroups.value].slice(0, 2)
   }
 }
 
 const openView = (viewName) => {
   currentView.value = viewName
-  // Scroll to top when opening new view
   setTimeout(() => {
     window.scrollTo(0, 0)
   }, 0)
@@ -149,7 +155,6 @@ const openView = (viewName) => {
 
 const backToPortfolio = () => {
   currentView.value = 'portfolio'
-  // Scroll to top when returning to portfolio
   setTimeout(() => {
     window.scrollTo(0, 0)
   }, 0)
@@ -165,6 +170,8 @@ const closeComingSoon = () => {
   comingSoonUrl.value = ''
 }
 </script>
+
+<!-- Keep all existing styles from ViewManager.vue -->
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
@@ -520,6 +527,469 @@ html, body {
 @media (max-height: 600px) and (orientation: landscape) {
   .portfolio-container {
     padding: 80px 15px 20px 15px;
+  }
+}
+
+/* ========================================
+   SUBSTANTIAL THEME DIFFERENTIATION
+   ======================================== */
+
+/* ============= ARTIST THEME ============= */
+/* Dark gallery with spotlight, NO stars */
+
+.tattoo-container::before,
+.tattoo-container::after {
+  display: none !important; /* Remove starfield */
+}
+
+.tattoo-container {
+  background:
+      radial-gradient(circle at 30% 20%, rgba(255, 107, 107, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(139, 0, 0, 0.2) 0%, transparent 50%),
+      linear-gradient(135deg, #1a0000 0%, #0a0000 100%);
+}
+
+.tattoo-container .portfolio-container {
+  background: rgba(0, 0, 0, 0.6);
+  border-left: 5px solid #ff6b6b;
+  border-right: 5px solid #ff6b6b;
+  padding: 120px 40px 40px 40px;
+  box-shadow:
+      inset 20px 0 40px rgba(0, 0, 0, 0.8),
+      inset -20px 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.tattoo-container .contact-card,
+.tattoo-container .experience-card,
+.tattoo-container .links-card {
+  background:
+      linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(0, 0, 0, 0.8) 100%);
+  border: 3px solid #ff6b6b;
+  border-radius: 0 20px 0 20px; /* Asymmetric corners */
+  transform: skewY(-1deg);
+  position: relative;
+}
+
+.tattoo-container .contact-card::after,
+.tattoo-container .experience-card::after,
+.tattoo-container .links-card::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(45deg, #ff6b6b, transparent, #8b0000);
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0.3;
+}
+
+.tattoo-container .timeline::before {
+  background: linear-gradient(180deg, #ff6b6b, #8b0000, #ff6b6b);
+  width: 6px;
+  box-shadow: 0 0 20px #ff6b6b;
+}
+
+/* ============= EXPLORER THEME ============= */
+/* Nature/organic with topographic lines, NO stars */
+
+.vet-container::before,
+.vet-container::after {
+  display: none !important; /* Remove starfield */
+}
+
+.vet-container {
+  background:
+      radial-gradient(ellipse at top, rgba(144, 238, 144, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+      linear-gradient(180deg, #0a3d0a 0%, #001a33 100%);
+  position: relative;
+}
+
+/* Add topographic contour lines */
+.vet-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+      repeating-radial-gradient(circle at 30% 40%,
+      transparent 0,
+      transparent 49px,
+      rgba(144, 238, 144, 0.1) 50px,
+      transparent 51px
+      ),
+      repeating-radial-gradient(circle at 70% 60%,
+      transparent 0,
+      transparent 79px,
+      rgba(0, 191, 255, 0.1) 80px,
+      transparent 81px
+      );
+  pointer-events: none;
+  z-index: 1;
+  animation: topoShift 30s linear infinite;
+}
+
+@keyframes topoShift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+.vet-container .contact-card,
+.vet-container .experience-card,
+.vet-container .links-card {
+  border-radius: 30px;
+  border: 3px solid rgba(144, 238, 144, 0.4);
+  background:
+      linear-gradient(135deg,
+      rgba(144, 238, 144, 0.08) 0%,
+      rgba(0, 191, 255, 0.08) 100%
+      );
+  box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      inset 0 0 40px rgba(144, 238, 144, 0.05);
+}
+
+.vet-container .avatar,
+.vet-container .link-icon {
+  border-radius: 50% !important; /* Fully circular for organic feel */
+}
+
+.vet-container .timeline::before {
+  background: linear-gradient(180deg,
+  rgba(144, 238, 144, 0.6),
+  rgba(0, 191, 255, 0.6)
+  );
+  width: 4px;
+  filter: blur(1px);
+}
+
+/* ============= PERFORMER THEME ============= */
+/* Dynamic diagonal energy, motion blur, NO stars */
+
+.dance-container::before,
+.dance-container::after {
+  display: none !important; /* Remove starfield */
+}
+
+.dance-container {
+  background:
+      linear-gradient(135deg,
+      #4a0040 0%,
+      #7a0070 25%,
+      #aa00aa 50%,
+      #d4145a 75%,
+      #ff6900 100%
+      );
+  position: relative;
+  overflow: hidden;
+}
+
+/* Diagonal motion streaks */
+.dance-container::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+      repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          rgba(255, 105, 180, 0.1) 40px,
+          rgba(255, 105, 180, 0.1) 80px
+      );
+  animation: diagonalSlide 20s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes diagonalSlide {
+  0% { transform: translate(0, 0) rotate(45deg); }
+  100% { transform: translate(113px, 113px) rotate(45deg); }
+}
+
+.dance-container .portfolio-container {
+  transform: skewY(-2deg);
+}
+
+.dance-container .contact-card,
+.dance-container .experience-card,
+.dance-container .links-card {
+  border-radius: 15px;
+  border: 3px solid rgba(255, 105, 180, 0.6);
+  background:
+      linear-gradient(135deg,
+      rgba(255, 105, 180, 0.15) 0%,
+      rgba(255, 165, 0, 0.1) 100%
+      );
+  transform: rotate(-1deg);
+  box-shadow:
+      5px 5px 0 rgba(255, 105, 180, 0.3),
+      -5px -5px 0 rgba(255, 165, 0, 0.3),
+      0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.dance-container .universe-btn {
+  transform: rotate(-3deg);
+  transition: all 0.3s ease;
+}
+
+.dance-container .universe-btn:hover {
+  transform: rotate(0deg) translateY(-3px) scale(1.05);
+}
+
+/* ============= GAMER THEME ============= */
+/* HUD interface with scanlines and hexagons */
+
+.gamer-container::before,
+.gamer-container::after {
+  /* Keep some stars but add scanlines */
+  opacity: 0.3;
+}
+
+/* Add scanlines overlay */
+.gamer-container::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(157, 78, 221, 0.05) 2px,
+      rgba(157, 78, 221, 0.05) 4px
+  );
+  pointer-events: none;
+  z-index: 3;
+  animation: scanlines 8s linear infinite;
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+.gamer-container .contact-card,
+.gamer-container .experience-card,
+.gamer-container .links-card {
+  border-radius: 0;
+  clip-path: polygon(
+      10px 0,
+      calc(100% - 10px) 0,
+      100% 10px,
+      100% calc(100% - 10px),
+      calc(100% - 10px) 100%,
+      10px 100%,
+      0 calc(100% - 10px),
+      0 10px
+  ); /* Octagonal shape */
+  border: 3px solid #9d4edd;
+  background:
+      linear-gradient(135deg,
+      rgba(157, 78, 221, 0.1) 0%,
+      rgba(0, 0, 0, 0.9) 100%
+      );
+  position: relative;
+  box-shadow:
+      inset 0 0 20px rgba(157, 78, 221, 0.3),
+      0 0 30px rgba(157, 78, 221, 0.5);
+}
+
+/* Corner brackets like HUD */
+.gamer-container .contact-card::before,
+.gamer-container .experience-card::before,
+.gamer-container .links-card::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 30px;
+  height: 30px;
+  border-top: 3px solid #9d4edd;
+  border-left: 3px solid #9d4edd;
+  animation: hudBracket 2s ease-in-out infinite;
+}
+
+.gamer-container .contact-card::after,
+.gamer-container .experience-card::after,
+.gamer-container .links-card::after {
+  content: '';
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  border-bottom: 3px solid #9d4edd;
+  border-right: 3px solid #9d4edd;
+  animation: hudBracket 2s ease-in-out infinite 1s;
+}
+
+@keyframes hudBracket {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============= FANTASY THEME ============= */
+/* Mystical particles, ornate borders, NO stars */
+
+.wizard-container::before,
+.wizard-container::after {
+  display: none !important; /* Remove starfield */
+}
+
+.wizard-container {
+  background:
+      radial-gradient(circle at 50% 50%, rgba(147, 0, 211, 0.2) 0%, transparent 50%),
+      linear-gradient(135deg, #1a0a3a 0%, #0a0a1a 100%);
+  position: relative;
+}
+
+/* Floating mystical particles */
+.wizard-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+      radial-gradient(2px 2px at 20% 30%, #ffd700, transparent),
+      radial-gradient(2px 2px at 60% 70%, #9300d3, transparent),
+      radial-gradient(3px 3px at 50% 50%, #ffd700, transparent),
+      radial-gradient(1px 1px at 80% 10%, #9300d3, transparent),
+      radial-gradient(2px 2px at 90% 60%, #ffd700, transparent),
+      radial-gradient(1px 1px at 15% 90%, #9300d3, transparent),
+      radial-gradient(2px 2px at 40% 20%, #ffd700, transparent);
+  background-size: 200px 200px;
+  background-position: 0 0, 50px 50px, 100px 100px;
+  animation: floatParticles 30s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+@keyframes floatParticles {
+  0% { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(-200px) translateX(50px); }
+}
+
+.wizard-container .contact-card,
+.wizard-container .experience-card,
+.wizard-container .links-card {
+  border-radius: 15px;
+  border: 4px solid;
+  border-image: linear-gradient(45deg, #9300d3, #ffd700, #9300d3) 1;
+  background:
+      linear-gradient(135deg,
+      rgba(147, 0, 211, 0.15) 0%,
+      rgba(0, 0, 0, 0.9) 100%
+      );
+  box-shadow:
+      0 0 40px rgba(147, 0, 211, 0.5),
+      inset 0 0 40px rgba(147, 0, 211, 0.1);
+  position: relative;
+}
+
+/* Ornate corner decorations */
+.wizard-container .contact-card::before,
+.wizard-container .experience-card::before,
+.wizard-container .links-card::before {
+  content: '✦';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  font-size: 20px;
+  color: #ffd700;
+  text-shadow: 0 0 10px #ffd700;
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+.wizard-container .contact-card::after,
+.wizard-container .experience-card::after,
+.wizard-container .links-card::after {
+  content: '✦';
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  font-size: 20px;
+  color: #9300d3;
+  text-shadow: 0 0 10px #9300d3;
+  animation: sparkle 3s ease-in-out infinite 1.5s;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2) rotate(90deg);
+  }
+}
+
+/* ============= TECH THEME ADJUSTMENTS ============= */
+/* Keep current but enhance slightly */
+
+.tech-container .contact-card,
+.tech-container .experience-card,
+.tech-container .links-card {
+  border-radius: 8px; /* Sharp corners */
+  background:
+      linear-gradient(135deg,
+      rgba(0, 245, 255, 0.05) 0%,
+      rgba(0, 0, 0, 0.9) 100%
+      );
+}
+
+/* Add circuit board pattern */
+.tech-container .contact-card::before,
+.tech-container .experience-card::before,
+.tech-container .links-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+      linear-gradient(90deg, rgba(0, 245, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(0, 245, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============= MOBILE RESPONSIVENESS ============= */
+
+@media (max-width: 768px) {
+  .dance-container .portfolio-container {
+    transform: skewY(-1deg); /* Less skew on mobile */
+  }
+
+  .tattoo-container .portfolio-container {
+    padding: 100px 15px 20px 15px;
+  }
+
+  .gamer-container .contact-card::before,
+  .gamer-container .contact-card::after,
+  .gamer-container .experience-card::before,
+  .gamer-container .experience-card::after,
+  .gamer-container .links-card::before,
+  .gamer-container .links-card::after {
+    width: 20px;
+    height: 20px;
+    top: 10px;
+    left: 10px;
   }
 }
 </style>
