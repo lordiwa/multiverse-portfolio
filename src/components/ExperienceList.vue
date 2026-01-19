@@ -66,20 +66,21 @@ defineProps({
 <style scoped>
 .experience-card {
   padding: 35px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg, 24px);
   margin-bottom: 35px;
-  backdrop-filter: blur(15px);
-  border: 3px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid rgba(255, 255, 255, 0.15);
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.12) 0%,
-  rgba(255, 255, 255, 0.06) 50%,
-  rgba(255, 255, 255, 0.03) 100%);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
-  inset 0 1px 0 rgba(255, 255, 255, 0.2),
-  0 0 80px rgba(255, 255, 255, 0.08);
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
   font-family: inherit;
+  transition: all var(--transition-smooth, 0.4s cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .experience-card::before {
@@ -89,8 +90,9 @@ defineProps({
   left: 0;
   right: 0;
   bottom: 0;
-  background: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.03) 3px, rgba(255, 255, 255, 0.03) 6px),
-  repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.02) 3px, rgba(255, 255, 255, 0.02) 6px);
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.02) 3px, rgba(255, 255, 255, 0.02) 6px),
+    repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.015) 3px, rgba(255, 255, 255, 0.015) 6px);
   pointer-events: none;
   z-index: 1;
 }
@@ -193,29 +195,29 @@ defineProps({
 .timeline-content {
   width: 45%;
   padding: 30px;
-  border-radius: 12px;
+  border-radius: var(--radius-md, 20px);
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.08) 0%,
-  rgba(255, 255, 255, 0.04) 50%,
-  rgba(255, 255, 255, 0.02) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  transition: all 0.4s ease;
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all var(--transition-smooth, 0.4s cubic-bezier(0.4, 0, 0.2, 1));
   position: relative;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
-  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .timeline-content:hover {
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.15) 0%,
-  rgba(255, 255, 255, 0.08) 50%,
-  rgba(255, 255, 255, 0.04) 100%);
-  transform: translateY(-5px) scale(1.02);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4),
-  inset 0 1px 0 rgba(255, 255, 255, 0.3),
-  0 0 60px currentColor;
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 100%);
+  transform: translateY(-6px);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.3),
+    0 0 40px var(--theme-glow, rgba(255, 255, 255, 0.15));
 }
 
 .timeline-item:nth-child(odd) .timeline-content {
@@ -363,24 +365,27 @@ defineProps({
 
 .tech-badge {
   padding: 6px 14px;
-  border-radius: 15px;
+  border-radius: var(--radius-sm, 12px);
   font-size: 0.85em;
   font-weight: 600;
-  background: linear-gradient(45deg,
-  rgba(255, 255, 255, 0.12) 0%,
-  rgba(255, 255, 255, 0.06) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .tech-badge:hover {
-  background: linear-gradient(45deg, currentColor, rgba(255, 255, 255, 0.3));
-  color: black;
+  background: linear-gradient(135deg, currentColor, rgba(255, 255, 255, 0.2));
+  color: #0f0f0f;
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 15px currentColor;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 15px currentColor;
+  border-color: transparent;
 }
 
 /* Theme-specific timeline content styles */

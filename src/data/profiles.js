@@ -2,18 +2,18 @@ export const profileData = {
   current: {
     contact: {
       name: "Rafael Matovelle",
-      title: "Software QA Analyst R&D Team - Python Developer | Selenium Java/C# | Cypress | Nightwatch, Sr JavaScript/TypeScript Developer - Angular | Loopback | Firebase, Sr. Unity 3D Developer - VR | AR | NFT Games | AWS",
+      title: "Full Stack Engineer @ Software Mind | QA Engineering, Full Stack, Data Science",
       location: "Quito, Pichincha, Ecuador",
       phone: "+593989661803",
       email: "srparca@gmail.com",
       linkedin: "https://www.linkedin.com/in/rmatovelle",
       avatar: "🤖",
-      skills: ["Prompt Engineering", "Data Science", "WebGL", "Python", "Unity 3D", "JavaScript", "TypeScript"],
+      skills: ["Front-End Development", "Team Leadership", "Prompt Engineering", "Data Science", "Node.js", "Vue.js", "Python"],
       languages: [
         { name: "Spanish", level: "Native" },
         { name: "English", level: "Native or Bilingual" }
       ],
-      summary: "I am a seasoned developer, who has worked on web development, as a front end and a back developer using NODE technologies. Currently, an R&D QA Engineer who loves automating everything enjoys staff management and planning. But I come from videogames and I love creating interactive stuff as a hobby and wish to mix it with AI. I am interested in game development, game QA, web development, general development QA, and app development in general. Always happy to hear an offer. Currently experimenting with generative art in HTML5 and blockchain technologies. Finally I love exercising and training martial arts."
+      summary: "I'm a Full Stack Engineer with experience in QA automation and Node.js development. I've led teams in frontend development and QA engineering, working on testing frameworks, automation, and fullstack applications across various R&D projects. My work includes building automated testing tools with Python and developing web platforms with Node.js, Vue, and WebGL.\n\nI work well with cross-functional teams and enjoy the collaborative aspects of software development. Being fluent in both Spanish and English helps me communicate effectively across different teams and projects. I've had the opportunity to lead projects and work with other developers, focusing on practical solutions that balance quality with delivery timelines.\n\nMy technical background covers testing frameworks, AWS infrastructure, and a range of development work from AR/VR to web platforms. I try to bring the structured approach from QA work into fullstack development, building systems that are functional and maintainable without overcomplicating things.\n\nAnd always show a smile"
     },
     experiences: [
       {
@@ -109,7 +109,7 @@ export const profileData = {
       {
         company: "Software Mind North America",
         position: "Quality Assurance Specialist",
-        duration: "Nov 2023 - Present (1 year 8 months)",
+        duration: "Nov 2023 - Present (2+ years)",
         location: "Remote",
         description: "Quality assurance for enterprise applications.",
         achievements: ["Enterprise QA", "Test strategy development"],
@@ -118,7 +118,7 @@ export const profileData = {
       {
         company: "Remoose Interactive",
         position: "Full Stack Engineer",
-        duration: "Dec 2023 - Present (1 year 7 months)",
+        duration: "Dec 2023 - Jan 2026 (2 years 2 months)",
         location: "Vancouver, British Columbia, Canada",
         description: "Worked as part of the R&D team to create remoose. Rapid prototyper and Fullstack developer.",
         achievements: ["R&D development", "Rapid prototyping", "Full-stack architecture"],

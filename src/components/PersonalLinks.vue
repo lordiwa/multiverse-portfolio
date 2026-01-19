@@ -119,21 +119,21 @@ const handleInteractiveLink = (url) => {
 
 .links-card {
   padding: 35px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg, 24px);
   margin-bottom: 35px;
-  backdrop-filter: blur(15px);
-  border: 3px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid rgba(255, 255, 255, 0.15);
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.12) 0%,
-  rgba(255, 255, 255, 0.06) 50%,
-  rgba(255, 255, 255, 0.03) 100%);
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
   box-shadow:
-      0 12px 45px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      0 0 90px rgba(255, 255, 255, 0.08);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
   font-family: inherit;
+  transition: all var(--transition-smooth, 0.4s cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .links-card::before {
@@ -144,8 +144,8 @@ const handleInteractiveLink = (url) => {
   right: 0;
   bottom: 0;
   background:
-      repeating-linear-gradient(60deg, transparent, transparent 4px, rgba(255,255,255,0.03) 4px, rgba(255,255,255,0.03) 8px),
-      repeating-linear-gradient(-60deg, transparent, transparent 4px, rgba(255,255,255,0.02) 4px, rgba(255,255,255,0.02) 8px);
+    repeating-linear-gradient(60deg, transparent, transparent 4px, rgba(255,255,255,0.02) 4px, rgba(255,255,255,0.02) 8px),
+    repeating-linear-gradient(-60deg, transparent, transparent 4px, rgba(255,255,255,0.015) 4px, rgba(255,255,255,0.015) 8px);
   pointer-events: none;
   z-index: 1;
 }
@@ -196,22 +196,22 @@ const handleInteractiveLink = (url) => {
   display: flex;
   align-items: center;
   gap: 25px;
-  padding: 30px;
-  border-radius: 12px;
+  padding: 25px;
+  border-radius: var(--radius-md, 20px);
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.1) 0%,
-  rgba(255, 255, 255, 0.05) 50%,
-  rgba(255, 255, 255, 0.02) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.15);
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: inherit;
   text-decoration: none;
-  transition: all 0.4s ease;
-  backdrop-filter: blur(10px);
+  transition: all var(--transition-smooth, 0.4s cubic-bezier(0.4, 0, 0.2, 1));
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   position: relative;
   overflow: hidden;
   box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .link-card::before {
@@ -222,44 +222,41 @@ const handleInteractiveLink = (url) => {
   right: 0;
   bottom: 0;
   background:
-      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
   pointer-events: none;
   z-index: 1;
 }
 
 .link-card:hover {
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.2) 0%,
-  rgba(255, 255, 255, 0.1) 50%,
-  rgba(255, 255, 255, 0.05) 100%);
-  transform: translateY(-8px) scale(1.03);
-  border-color: rgba(255, 255, 255, 0.3);
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 100%);
+  transform: translateY(-8px);
+  border-color: rgba(255, 255, 255, 0.25);
   box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      0 0 80px currentColor;
+    0 20px 50px rgba(0, 0, 0, 0.3),
+    0 0 40px var(--theme-glow, rgba(255, 255, 255, 0.15));
 }
 
 .link-icon {
-  font-size: 3em;
-  width: 80px;
-  height: 80px;
+  font-size: 2.5em;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: linear-gradient(45deg,
-  rgba(255, 255, 255, 0.15) 0%,
-  rgba(255, 255, 255, 0.08) 100%);
-  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-md, 20px);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 2;
   box-shadow:
-      0 0 30px rgba(0, 0, 0, 0.5),
-      inset 0 0 20px rgba(255, 255, 255, 0.1),
-      0 0 40px currentColor;
-  filter: drop-shadow(0 0 15px currentColor);
-  animation: iconFloat 4s ease-in-out infinite alternate;
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
+  filter: drop-shadow(0 0 10px currentColor);
+  transition: all 0.3s ease;
 }
 
 @keyframes iconFloat {
@@ -381,16 +378,16 @@ const handleInteractiveLink = (url) => {
 }
 
 .current-projects {
-  border-top: 3px solid rgba(255, 255, 255, 0.2);
-  padding-top: 35px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 30px;
   position: relative;
   z-index: 2;
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.06) 0%,
-  rgba(255, 255, 255, 0.02) 100%);
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%);
   padding: 25px;
-  border-radius: 12px;
-  margin-top: 20px;
+  border-radius: var(--radius-md, 20px);
+  margin-top: 25px;
 }
 
 .current-projects h3 {
@@ -414,23 +411,23 @@ const handleInteractiveLink = (url) => {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 18px;
+  border-radius: var(--radius-sm, 12px);
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.08) 0%,
-  rgba(255, 255, 255, 0.04) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-smooth, 0.4s cubic-bezier(0.4, 0, 0.2, 1));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .project-item:hover {
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.15) 0%,
-  rgba(255, 255, 255, 0.08) 100%);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-3px) translateX(8px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px) translateX(6px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .project-status-dot {

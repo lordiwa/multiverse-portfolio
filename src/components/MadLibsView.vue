@@ -364,7 +364,7 @@ const generateStory = () => {
   let story = madLibsData[props.career].story
   userInputs.value.forEach((input, index) => {
     const placeholder = `{${index}}`
-    const escapedPlaceholder = placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\    story: `Rafael was brewing a potion with <span class="highlight">{2}</span> in the <span class="highlight">{7}</span> when he')
+    const escapedPlaceholder = placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     story = story.replace(new RegExp(escapedPlaceholder, 'g'), input.trim())
   })
 

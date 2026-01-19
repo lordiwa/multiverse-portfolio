@@ -82,6 +82,23 @@
       <h3>Summary</h3>
       <p>{{ contact.summary }}</p>
     </div>
+
+    <!-- Interactive Experiences Section -->
+    <div :class="['games-section', theme.sectionStyle]">
+      <h3>Interactive Experiences</h3>
+      <div class="games-grid">
+        <button @click="$emit('open-tetris')" :class="['game-card', theme.sectionStyle]">
+          <span class="game-icon">🎮</span>
+          <span class="game-title">Neural Tetris</span>
+          <span class="game-desc">Infinite progression challenge</span>
+        </button>
+        <button @click="$emit('open-madlibs')" :class="['game-card', theme.sectionStyle]">
+          <span class="game-icon">📝</span>
+          <span class="game-title">Mad Libs</span>
+          <span class="game-desc">Create hilarious stories</span>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -553,26 +570,29 @@ defineEmits(['open-email', 'open-madlibs', 'open-tetris'])
 
 .skill-badge {
   padding: 10px 18px;
-  border-radius: 20px;
+  border-radius: var(--radius-sm, 12px);
   font-size: 0.9em;
   font-weight: 600;
-  border: 2px solid currentColor;
-  background: linear-gradient(45deg,
-  rgba(255, 255, 255, 0.1) 0%,
-  rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .skill-badge:hover {
-  background: linear-gradient(45deg, currentColor, rgba(255,255,255,0.2));
-  color: black;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px currentColor;
+  background: linear-gradient(135deg, currentColor, rgba(255, 255, 255, 0.3));
+  color: #0f0f0f;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 25px currentColor;
   text-shadow: none;
+  border-color: transparent;
 }
 
 .languages-list {
@@ -621,24 +641,136 @@ defineEmits(['open-email', 'open-madlibs', 'open-tetris'])
   font-size: 1.05em;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   letter-spacing: 0.3px;
+  white-space: pre-line;
 }
 
-/* Contact Card Base */
-.contact-card {
-  padding: 30px;
-  border-radius: 12px;
+/* Games Section */
+.games-section {
   margin-bottom: 30px;
-  backdrop-filter: blur(15px);
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.4s ease;
+  position: relative;
+  z-index: 2;
   background: linear-gradient(135deg,
-  rgba(255, 255, 255, 0.1) 0%,
-  rgba(255, 255, 255, 0.05) 50%,
-  rgba(255, 255, 255, 0.02) 100%);
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%);
+  padding: 25px;
+  border-radius: var(--radius-md, 20px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+.games-section h3 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-family: 'Orbitron', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px currentColor;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.game-card {
+  background: linear-gradient(135deg,
+    rgba(var(--theme-rgb, 255, 255, 255), 0.15) 0%,
+    rgba(0, 0, 0, 0.4) 100%);
+  border: 2px solid rgba(var(--theme-rgb, 255, 255, 255), 0.3);
+  border-radius: var(--radius-md, 20px);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-family: inherit;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.game-card:hover::before {
+  left: 100%;
+}
+
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
   box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      0 0 60px rgba(255, 255, 255, 0.05);
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px currentColor;
+  border-color: currentColor;
+  background: linear-gradient(135deg,
+    rgba(var(--theme-rgb, 255, 255, 255), 0.25) 0%,
+    rgba(0, 0, 0, 0.5) 100%);
+}
+
+.game-card:active {
+  transform: translateY(-4px) scale(0.98);
+}
+
+.game-icon {
+  font-size: 3em;
+  display: block;
+  filter: drop-shadow(0 0 10px currentColor);
+  animation: gameIconPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes gameIconPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+.game-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  font-family: 'Orbitron', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px currentColor;
+}
+
+.game-desc {
+  font-size: 0.9em;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* Contact Card Base - Glassmorphism */
+.contact-card {
+  padding: 35px;
+  border-radius: var(--radius-lg, 24px);
+  margin-bottom: 30px;
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all var(--transition-smooth, 0.4s cubic-bezier(0.4, 0, 0.2, 1));
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
   font-family: inherit;
@@ -652,19 +784,18 @@ defineEmits(['open-email', 'open-madlibs', 'open-tetris'])
   right: 0;
   bottom: 0;
   background:
-      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
   pointer-events: none;
   z-index: 1;
 }
 
 .contact-card:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-8px);
   box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      0 0 80px currentColor;
-  border-color: rgba(255, 255, 255, 0.4);
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 40px var(--theme-glow, rgba(255, 255, 255, 0.15));
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Mobile responsive */
@@ -756,8 +887,29 @@ defineEmits(['open-email', 'open-madlibs', 'open-tetris'])
 
   .skills-section,
   .languages-section,
-  .summary-section {
+  .summary-section,
+  .games-section {
     padding: 15px;
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .game-card {
+    padding: 20px;
+    flex-direction: row;
+    text-align: left;
+    gap: 15px;
+  }
+
+  .game-icon {
+    font-size: 2.5em;
+  }
+
+  .game-card:hover {
+    transform: translateY(-4px);
   }
 }
 

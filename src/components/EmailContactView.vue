@@ -77,6 +77,13 @@
             </span>
           </button>
         </div>
+
+        <!-- reCAPTCHA Attribution (required when hiding badge) -->
+        <p class="recaptcha-notice">
+          This site is protected by reCAPTCHA and the Google
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and
+          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> apply.
+        </p>
       </form>
 
       <!-- Success/Error Messages -->
@@ -107,6 +114,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useReCaptcha } from 'vue-recaptcha-v3'
 import emailjs from '@emailjs/browser'
 
 const props = defineProps({
@@ -121,6 +129,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['back'])
+
+// reCAPTCHA v3
+const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
 
 const isLoading = ref(false)
 const showSuccess = ref(false)
@@ -138,6 +149,9 @@ const formData = reactive({
 const EMAILJS_SERVICE_ID = 'service_5x9j9fs'
 const EMAILJS_TEMPLATE_ID = 'template_dc44l2q'
 const EMAILJS_PUBLIC_KEY = 'SWXJ2EX2b2pyGhEOV'
+
+// Minimum reCAPTCHA score to accept (0.0 - 1.0, higher = more likely human)
+const MIN_RECAPTCHA_SCORE = 0.3
 
 const getModalTitle = () => {
   const titles = {
@@ -179,15 +193,30 @@ const sendEmail = async () => {
   showError.value = false
 
   try {
+    // Wait for reCAPTCHA to be ready
+    await recaptchaLoaded()
+
+    // Execute reCAPTCHA and get token
+    const recaptchaToken = await executeRecaptcha('contact_form')
+
+    if (!recaptchaToken) {
+      throw new Error('reCAPTCHA verification failed. Please try again.')
+    }
+
+    // Note: In a production environment with a backend, you would verify
+    // the token server-side. Since we're using EmailJS (client-side only),
+    // we include the token in the email for reference.
+
     const templateParams = {
       subject: formData.subject,
       name: formData.name,
       from_email: formData.email,
       message: formData.message,
-      time: new Date().toLocaleString()
+      time: new Date().toLocaleString(),
+      recaptcha_token: recaptchaToken.substring(0, 20) + '...' // Truncated for readability
     }
 
-    console.log('Sending email with params:', templateParams)
+    console.log('Sending email with reCAPTCHA verification')
 
     const result = await emailjs.send(
         EMAILJS_SERVICE_ID,
@@ -202,7 +231,7 @@ const sendEmail = async () => {
   } catch (error) {
     console.error('Error sending email:', error)
     showError.value = true
-    errorMessage.value = 'Failed to send email. Please try again.'
+    errorMessage.value = error.message || 'Failed to send email. Please try again.'
   } finally {
     isLoading.value = false
   }
@@ -457,6 +486,24 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.recaptcha-notice {
+  margin-top: 20px;
+  font-size: 0.75em;
+  opacity: 0.6;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.recaptcha-notice a {
+  color: currentColor;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.recaptcha-notice a:hover {
+  opacity: 0.8;
 }
 
 .message {

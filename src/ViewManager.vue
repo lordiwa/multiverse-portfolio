@@ -1,7 +1,7 @@
 <template>
   <div class="view-manager" :class="currentTheme?.containerClass">
     <!-- Main Portfolio View -->
-    <div v-if="currentView === 'portfolio'" class="portfolio-view">
+    <div v-if="currentView === 'portfolio'" :class="['portfolio-view', { 'transitioning': isTransitioning }]">
       <!-- Universe Switcher -->
       <div class="universe-switcher">
         <button
@@ -79,6 +79,7 @@ import { themes, getThemeGroup, getCareersNotInGroups } from './data/themes.js'
 const currentView = ref('portfolio')
 const currentUniverse = ref('current')
 const selectedCareer = ref('current')
+const isTransitioning = ref(false)
 
 // Track last 2 theme groups to prevent repetition
 const lastThemeGroups = ref([])
@@ -114,6 +115,12 @@ const currentTheme = computed(() => {
 })
 
 const switchUniverse = (universe) => {
+  // Trigger portal transition animation
+  isTransitioning.value = true
+  setTimeout(() => {
+    isTransitioning.value = false
+  }, 600)
+
   currentUniverse.value = universe
 
   if (universe === 'current') {
@@ -176,6 +183,118 @@ const closeComingSoon = () => {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Metal+Mania&family=Fredoka+One&family=Pacifico&family=Russo+One&family=Bungee&display=swap');
+
+/* ========================================
+   MODERN DESIGN SYSTEM - GLASSMORPHISM
+   ======================================== */
+:root {
+  /* Glassmorphism base */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 20px;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Modern border radius */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+
+  /* Smooth transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Theme colors with RGB values for gradients */
+  --tech-primary: #00f5ff;
+  --tech-secondary: #0080ff;
+  --tech-rgb: 0, 245, 255;
+
+  --artist-primary: #ff4757;
+  --artist-secondary: #ff6b81;
+  --artist-rgb: 255, 71, 87;
+
+  --explorer-primary: #10ac84;
+  --explorer-secondary: #1abc9c;
+  --explorer-rgb: 16, 172, 132;
+
+  --performer-primary: #e056fd;
+  --performer-secondary: #ff9f43;
+  --performer-rgb: 224, 86, 253;
+
+  --gamer-primary: #9d4edd;
+  --gamer-secondary: #00d9ff;
+  --gamer-rgb: 157, 78, 221;
+
+  --fantasy-primary: #8854d0;
+  --fantasy-secondary: #f9ca24;
+  --fantasy-rgb: 136, 84, 208;
+}
+
+/* Modern card base class */
+.modern-card {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-smooth);
+}
+
+.modern-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 40px var(--theme-glow, rgba(255, 255, 255, 0.2));
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Modern skill badge */
+.modern-skill-badge {
+  background: linear-gradient(135deg,
+    rgba(var(--theme-rgb, 255, 255, 255), 0.2) 0%,
+    rgba(var(--theme-rgb, 255, 255, 255), 0.1) 100%);
+  border: 1px solid rgba(var(--theme-rgb, 255, 255, 255), 0.3);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 0.85em;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.modern-skill-badge:hover {
+  background: linear-gradient(135deg, var(--primary, #fff), var(--secondary, #ccc));
+  color: white;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(var(--theme-rgb, 255, 255, 255), 0.4);
+}
+
+/* Portal transition animation */
+@keyframes portalOpen {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+    filter: blur(20px);
+  }
+  50% {
+    transform: scale(1.1) rotate(0deg);
+    opacity: 1;
+    filter: blur(5px);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.portfolio-view.transitioning {
+  animation: portalOpen 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 * {
   margin: 0;
@@ -396,66 +515,83 @@ html, body {
   top: 20px;
   right: 20px;
   display: flex;
-  gap: 15px;
+  gap: 6px;
   z-index: 1000;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 50px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .universe-btn {
   padding: 12px 24px;
-  border: 3px solid;
+  border: none;
   background: transparent;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 44px;
   font-weight: 700;
   font-family: 'Orbitron', monospace;
   transition: all 0.3s ease;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 1px;
   position: relative;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .universe-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .universe-btn:first-child {
   background: linear-gradient(45deg,
-  rgba(255,0,150,0.1) 0%,
-  rgba(0,255,255,0.1) 25%,
-  rgba(255,255,0,0.1) 50%,
-  rgba(255,0,255,0.1) 75%,
-  rgba(0,255,150,0.1) 100%);
-  animation: rainbowGlow 3s ease-in-out infinite alternate;
+    rgba(255,0,150,0.15) 0%,
+    rgba(0,255,255,0.15) 25%,
+    rgba(255,255,0,0.15) 50%,
+    rgba(255,0,255,0.15) 75%,
+    rgba(0,255,150,0.15) 100%);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .universe-btn:first-child::before {
   content: '';
   position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
   background: linear-gradient(45deg,
-  #0066ff, #00ffff, rgba(255, 255, 255, 0.13), #ff00ff, #00ff96);
-  border-radius: 12px;
+    #0066ff, #00ffff, rgba(255, 255, 255, 0.2), #ff00ff, #00ff96);
+  border-radius: 46px;
   z-index: -1;
-  filter: blur(10px);
-  opacity: 0.7;
+  filter: blur(8px);
+  opacity: 0.5;
   animation: rainbowPulse 2s ease-in-out infinite alternate;
 }
 
-@keyframes rainbowGlow {
-  0% { filter: brightness(1) saturate(1.2); }
-  100% { filter: brightness(1.3) saturate(1.5); }
+.universe-btn.active {
+  background: linear-gradient(135deg, var(--tech-primary, #00f5ff), var(--tech-secondary, #0080ff));
+  color: #0f0f0f;
+  box-shadow: 0 4px 20px rgba(0, 245, 255, 0.4);
+  font-weight: 800;
+}
+
+.universe-btn:first-child.active {
+  background: linear-gradient(135deg,
+    #ff0096 0%,
+    #00d9ff 50%,
+    #00ff96 100%);
+  box-shadow: 0 4px 25px rgba(255, 0, 150, 0.4), 0 4px 25px rgba(0, 255, 150, 0.3);
 }
 
 @keyframes rainbowPulse {
-  0% { opacity: 0.5; transform: scale(1); }
-  100% { opacity: 0.9; transform: scale(1.1); }
+  0% { opacity: 0.4; transform: scale(1); }
+  100% { opacity: 0.7; transform: scale(1.05); }
 }
 
 .portfolio-container {
