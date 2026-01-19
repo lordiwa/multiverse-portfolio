@@ -1,21 +1,19 @@
 {
   "name": "multiverse-portfolio",
   "version": "1.0.0",
-  "description": "Rafael Matovelle's Multiverse Portfolio",
-  "type": "module",
+  "description": "Rafael Matovelle's Multiverse Portfolio - Monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "npm run dev:api & npm run dev:web",
+    "dev:web": "npm run dev -w @multiverse/web",
+    "dev:api": "npm run dev -w @multiverse/api",
+    "build": "npm run build -w @multiverse/web",
+    "start": "npm run start -w @multiverse/api"
   },
-  "dependencies": {
-    "@emailjs/browser": "^4.4.1",
-    "firebase": "^11.8.1",
-    "vue": "^3.4.0",
-    "vue-recaptcha-v3": "^2.0.1"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.0",
-    "vite": "^5.0.0"
-  }
+  "keywords": ["portfolio", "vue", "express", "monorepo"],
+  "author": "Rafael Matovelle",
+  "license": "MIT"
 }
