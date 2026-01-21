@@ -1,32 +1,32 @@
 <template>
-  <div class="synthwave-loader" :class="{ 'fade-out': fadeOut }">
-    <!-- Scanlines overlay -->
-    <div class="scanlines"></div>
+  <div class="synthwave-loader" :class="{ 'fade-out': fadeOut, 'mobile': isMobile }">
+    <!-- Scanlines overlay (desktop only) -->
+    <div v-if="!isMobile" class="scanlines"></div>
 
-    <!-- Animated stars/particles background -->
+    <!-- Animated stars/particles background (reduced on mobile) -->
     <div class="particle-field">
-      <div v-for="n in 50" :key="n" class="particle" :style="getParticleStyle(n)"></div>
+      <div v-for="n in particleCount" :key="n" class="particle" :style="getParticleStyle(n)"></div>
     </div>
 
-    <!-- Grid floor -->
-    <div class="grid-container">
+    <!-- Grid floor (desktop only) -->
+    <div v-if="!isMobile" class="grid-container">
       <div class="grid-floor"></div>
     </div>
 
-    <!-- Synthwave sun -->
+    <!-- Synthwave sun (simplified on mobile) -->
     <div class="sun-container">
       <div class="sun">
-        <div class="sun-glow"></div>
+        <div v-if="!isMobile" class="sun-glow"></div>
         <div class="sun-core"></div>
-        <div class="sun-lines">
+        <div v-if="!isMobile" class="sun-lines">
           <div v-for="n in 8" :key="n" class="sun-line" :style="{ '--line-index': n }"></div>
         </div>
       </div>
-      <div class="sun-reflection"></div>
+      <div v-if="!isMobile" class="sun-reflection"></div>
     </div>
 
-    <!-- Mountain silhouettes -->
-    <div class="mountains">
+    <!-- Mountain silhouettes (desktop only) -->
+    <div v-if="!isMobile" class="mountains">
       <svg class="mountain-layer" viewBox="0 0 1200 200" preserveAspectRatio="none">
         <polygon class="mountain mountain-1" points="0,200 200,50 400,200" />
         <polygon class="mountain mountain-2" points="300,200 500,30 700,200" />
@@ -141,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const emit = defineEmits(['loaded'])
 
@@ -149,6 +149,15 @@ const progress = ref(0)
 const fadeOut = ref(false)
 const isReady = ref(false)
 let progressInterval = null
+
+// Mobile detection
+const isMobile = ref(false)
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 768
+}
+
+// Reduce particles on mobile for performance
+const particleCount = computed(() => isMobile.value ? 10 : 50)
 
 const getParticleStyle = (_index) => {
   const x = Math.random() * 100
@@ -182,20 +191,26 @@ const startMultiverse = () => {
 }
 
 onMounted(() => {
-  // Simulate loading progress
+  // Check if mobile
+  checkMobile()
+
+  // Simulate loading progress (faster on mobile)
+  const interval = isMobile.value ? 50 : 100
+  const increment = isMobile.value ? 15 : 8
+
   progressInterval = setInterval(() => {
     if (progress.value < 100) {
-      // Variable speed for more realistic feel
-      const increment = Math.random() * 8 + 2
-      progress.value = Math.min(100, progress.value + increment)
+      // Variable speed for more realistic feel (faster on mobile)
+      const inc = Math.random() * increment + 2
+      progress.value = Math.min(100, progress.value + inc)
     } else {
       clearInterval(progressInterval)
       // Show the start button after a short delay
       setTimeout(() => {
         isReady.value = true
-      }, 500)
+      }, isMobile.value ? 200 : 500)
     }
-  }, 100)
+  }, interval)
 })
 
 onUnmounted(() => {
@@ -1167,6 +1182,57 @@ onUnmounted(() => {
   75% {
     transform: translateY(30px) rotate(270deg);
     opacity: 0.6;
+  }
+}
+
+/* Mobile performance optimizations - disable heavy effects */
+.synthwave-loader.mobile .particle {
+  animation: none;
+  opacity: 0.4;
+}
+
+.synthwave-loader.mobile .glitch-text::before,
+.synthwave-loader.mobile .glitch-text::after {
+  display: none; /* Disable glitch effect */
+}
+
+.synthwave-loader.mobile .hex-segment {
+  animation: none;
+  opacity: 0.7;
+}
+
+.synthwave-loader.mobile .hexagon-ring {
+  animation-duration: 12s; /* Slower rotation */
+}
+
+.synthwave-loader.mobile .progress-bar {
+  animation: none;
+  background: linear-gradient(90deg, #00fff9, #ff00ff);
+}
+
+.synthwave-loader.mobile .corner {
+  animation: none;
+}
+
+.synthwave-loader.mobile .center-triangle {
+  animation: none;
+}
+
+.synthwave-loader.mobile .sun {
+  animation: sunRise 2s ease-out forwards; /* Only sunrise, no pulse */
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .synthwave-loader * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .progress-bar {
+    animation: none !important;
+    transition: width 0.3s ease !important;
   }
 }
 

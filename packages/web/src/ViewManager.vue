@@ -51,10 +51,10 @@
       </div>
 
       <!-- API Status Button -->
-      <a href="/api-status" target="_blank" class="api-status-btn" title="View System Status">
+      <button class="api-status-btn" title="View System Status" @click="openApiStatus">
         <span class="status-dot" :class="{ online: apiOnline }"></span>
         <span class="status-text">API</span>
-      </a>
+      </button>
 
       <!-- Layout Manager - handles different compositions -->
       <LayoutManager
@@ -244,6 +244,10 @@ const openComingSoon = (url) => {
 const closeComingSoon = () => {
   showComingSoon.value = false
   comingSoonUrl.value = ''
+}
+
+const openApiStatus = () => {
+  window.open('/api-status', '_blank', 'noopener,noreferrer')
 }
 </script>
 
@@ -747,34 +751,62 @@ html, body {
   }
 }
 
-/* Mobile adjustments for synthwave bg */
+/* Mobile adjustments for synthwave bg - PERFORMANCE OPTIMIZED */
 @media (max-width: 768px) {
-  .synth-sun {
-    width: 250px;
-    height: 250px;
-    bottom: 20%;
+  /* Disable heavy synthwave background on mobile */
+  .synthwave-bg {
+    display: none;
   }
 
-  .synth-mountains {
-    height: 200px;
-    bottom: 18%;
+  /* Simplify the main background - disable animated grid */
+  .view-manager::after {
+    display: none;
   }
 
-  .synth-grid {
-    height: 50%;
+  /* Simplify sun - static, smaller */
+  .view-manager::before {
+    width: 150px;
+    height: 150px;
+    bottom: 25%;
+    animation: none;
+    opacity: 0.4;
   }
 
-  .sun-line {
-    height: 4px;
+  /* Disable starfield animations on mobile */
+  .view-manager::before,
+  .view-manager::after {
+    animation: none !important;
+  }
+}
+
+/* Even more aggressive for small phones */
+@media (max-width: 480px) {
+  .view-manager::before {
+    width: 100px;
+    height: 100px;
+    opacity: 0.3;
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .view-manager::before,
+  .view-manager::after,
+  .synth-grid,
+  .synth-sun,
+  .synth-mountains,
+  .mountain,
+  .sun-body {
+    animation: none !important;
   }
 
-  .sun-line:nth-child(2) { height: 5px; }
-  .sun-line:nth-child(3) { height: 6px; }
-  .sun-line:nth-child(4) { height: 7px; }
-  .sun-line:nth-child(5) { height: 8px; }
-  .sun-line:nth-child(6) { height: 9px; }
-  .sun-line:nth-child(7) { height: 10px; }
-  .sun-line:nth-child(8) { height: 11px; }
+  .portfolio-view.transitioning {
+    animation: none !important;
+  }
+
+  .synthwave-bg {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1047,6 +1079,34 @@ html, body {
   background: var(--synth-cyan);
   box-shadow: 0 0 10px var(--synth-cyan), 0 0 20px var(--synth-cyan);
   animation: neonPulse 2s ease-in-out infinite;
+}
+
+.api-status-btn .status-dot.demo {
+  background: #ffa500;
+  box-shadow: 0 0 10px #ffa500, 0 0 20px #ffa500;
+  animation: demoPulse 2s ease-in-out infinite;
+}
+
+.api-status-btn.demo {
+  border-color: rgba(255, 165, 0, 0.3);
+  color: #ffa500;
+  text-shadow: 0 0 10px #ffa500;
+}
+
+.api-status-btn.demo:hover {
+  border-color: #ffa500;
+  box-shadow: 0 0 20px rgba(255, 165, 0, 0.4);
+}
+
+@keyframes demoPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px #ffa500, 0 0 20px #ffa500;
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px #ffa500, 0 0 30px #ffa500;
+  }
 }
 
 @keyframes neonPulse {

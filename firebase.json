@@ -8,9 +8,33 @@
     ],
     "rewrites": [
       {
+        "source": "/api/health",
+        "function": "health"
+      },
+      {
+        "source": "/api/leaderboard",
+        "function": "leaderboard"
+      },
+      {
+        "source": "/api/stats",
+        "function": "stats"
+      },
+      {
+        "source": "/api/sendEmail",
+        "function": "sendEmail"
+      },
+      {
+        "source": "/api-status",
+        "function": "apiStatus"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
     ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
   }
 }
